@@ -1,14 +1,17 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-interface Message extends Document {
+// Type of the Message Schema
+export interface Message extends Document {
   content: string;
   createdAt: Date;
 }
 
+// Message Schema
 const messageSchema: Schema<Message> = new Schema({
   content: {
     type: String,
     required: true,
+    trim: true,
   },
   createdAt: {
     type: Date,
@@ -17,7 +20,8 @@ const messageSchema: Schema<Message> = new Schema({
   },
 });
 
-interface User extends Document {
+// Type of the User Schema
+export interface User extends Document {
   username: string;
   email: string;
   password: string;
@@ -28,12 +32,13 @@ interface User extends Document {
   messages: Message[];
 }
 
+// User Schema
 const userSchema: Schema<User> = new Schema({
   username: {
     type: String,
     required: [true, "Username is required"],
-    trim: true,
     unique: true,
+    trim: true,
   },
   email: {
     type: String,
