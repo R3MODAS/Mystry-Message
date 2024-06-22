@@ -5,14 +5,14 @@ import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  // connect to database
+  // connect to db
   connectDB();
 
   try {
     // get data from request body
     const { username, email, password } = await request.json();
 
-    // check if the user is verified by username exists in the db or not
+    // check if the user with the username is verified exists in the db or not
     const existingUserVerifiedByUsername = await UserModel.findOne({
       username,
       isVerified: true,
@@ -27,14 +27,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // check if the user with email exists in the db or not
+    // check if the user with the email exists in the db or not
     const existingUserByEmail = await UserModel.findOne({ email });
 
-    // generate the verifyCode
-    let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+    // generate a verify code
+    const verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
 
+    // if the user with the email exists
     if (existingUserByEmail) {
-      // if the existing user with email is verified
+      // if the user with the email is verified
       if (existingUserByEmail.isVerified) {
         return NextResponse.json(
           {
@@ -45,27 +46,33 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // if the existing user with email is not verified
+      // if the user with the email is not verified
       else {
+        // update the user password, verify code and expiry
         existingUserByEmail.password = password;
         existingUserByEmail.verifyCode = verifyCode;
         existingUserByEmail.verifyCodeExpiry = new Date(
           Date.now() + 60 * 60 * 1000
         );
+
+        // save the changes
         await existingUserByEmail.save();
       }
-    } else {
-      // generate the verify code expiry
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 1);
+    }
 
-      // create a new entry for user in db
+    // if the user with the email doesn't exists
+    else {
+      // generate the verify code expiry
+      const expiryCode = new Date();
+      expiryCode.setHours(expiryCode.getHours() + 1);
+
+      // create a new user entry for db
       const newUser = await UserModel.create({
         username,
         email,
         password,
         verifyCode,
-        verifyCodeExpiry: expiryDate,
+        verifyCodeExpiry: expiryCode,
         messages: [],
       });
     }
@@ -76,7 +83,6 @@ export async function POST(request: NextRequest) {
       username,
       verifyCode
     );
-
     // if the email is not sent successfully
     if (!emailResponse.success) {
       return NextResponse.json(
@@ -88,22 +94,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // return the response
+    // if the email is sent successfully then return the response
     return NextResponse.json(
       {
         success: true,
-        message: "User registered successfully. Please verify your account",
+        message: "User is registered successfully. Please verify your account",
       },
       { status: 201 }
     );
-  } catch (err) {
-    console.error("Error while registering the user", err);
-    return Response.json(
-      {
-        success: false,
-        message: "Error while registering the user",
-      },
-      { status: 500 }
-    );
-  }
+  } catch (err) {}
 }
