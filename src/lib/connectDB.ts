@@ -20,8 +20,8 @@ async function connectDB(): Promise<void> {
     console.log(
       `MongoDB is connected successfully !! DB Host: ${db.connection.host}`
     );
-  } catch (err) {
-    console.log(`Failed to connect to MongoDB`, err);
+  } catch (err: any) {
+    console.log(`Failed to connect to MongoDB`, err.message);
     process.exit(1);
   }
 }

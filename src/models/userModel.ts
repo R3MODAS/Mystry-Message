@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import bcrypt from "bcryptjs";
 
 // Defining type for message schema
 export interface Message extends Document {
@@ -31,60 +30,55 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessages: boolean;
   messages: Message[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Defining the user schema
-const userSchema: Schema<User> = new Schema({
-  username: {
-    type: String,
-    required: [true, "Please enter a username"],
-    unique: true,
-    trim: true,
+const userSchema: Schema<User> = new Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "Please enter a username"],
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, "Please enter an email"],
+      unique: true,
+      trim: true,
+      match: [
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        "Please enter a valid email",
+      ],
+    },
+    password: {
+      type: String,
+      required: [true, "Please enter a password"],
+      trim: true,
+    },
+    verifyCode: {
+      type: String,
+      required: [true, "Please enter a verify code"],
+      trim: true,
+    },
+    verifyCodeExpiry: {
+      type: Date,
+      required: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isAcceptingMessages: {
+      type: Boolean,
+      default: true,
+    },
+    messages: [messageSchema],
   },
-  email: {
-    type: String,
-    required: [true, "Please enter an email"],
-    unique: true,
-    trim: true,
-    match: [
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      "Please enter a valid email",
-    ],
-  },
-  password: {
-    type: String,
-    required: [true, "Please enter a password"],
-    trim: true,
-  },
-  verifyCode: {
-    type: String,
-    required: [true, "Please enter a verify code"],
-    trim: true,
-  },
-  verifyCodeExpiry: {
-    type: Date,
-    required: true,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  isAcceptingMessages: {
-    type: Boolean,
-    default: true,
-  },
-  messages: [messageSchema],
-});
-
-// Hashing the password
-userSchema.pre("save", async function (next) {
-  // if the password is not new or modified then don't hash it
-  if (!this.isModified("password")) return next();
-
-  // if the password is new or modified then hash it
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
-});
+  { timestamps: true }
+);
 
 // Defining the user model for the user schema
 const UserModel =
