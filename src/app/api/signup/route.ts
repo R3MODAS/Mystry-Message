@@ -7,17 +7,19 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   // connect to db
-  await connectDB();
+  connectDB();
 
   try {
     // get data from request body
     const { username, email, password } = await request.json();
 
-    // check if a user verified with the username exists in the db or not
+    // check if the verified user with username exists in the db or not
     const existingUserVerifiedByUsername = await UserModel.findOne({
       username,
       isVerified: true,
     });
+
+    // if the user is verified by username
     if (existingUserVerifiedByUsername) {
       return NextResponse.json(
         {
@@ -31,72 +33,72 @@ export async function POST(request: NextRequest) {
     // check if the user with email exists in the db or not
     const existingUserByEmail = await UserModel.findOne({ email });
 
-    // generate the verify code
-    const code = otpGenerator
-      .generate(6, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
-      })
-      .toString();
+    // generate a verify code
+    const verifyCode = otpGenerator.generate(6, {
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
 
-    // if the user with the email exists
+    // if the user exists with email
     if (existingUserByEmail) {
-      // if the user with the email is verified
+      // if the user exists with email is verified
       if (existingUserByEmail.isVerified) {
         return NextResponse.json(
           {
             success: false,
-            message: "User already exists with this email",
+            message: "User is already registered with this email",
           },
           { status: 400 }
         );
       }
-      //  if the user with the email is not verified
-      else {
-        // hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
 
-        // update the changes
-        existingUserByEmail.password = hashedPassword;
-        existingUserByEmail.verifyCode = code;
-        existingUserByEmail.verifyCodeExpiry = new Date(
-          Date.now() + 60 * 60 * 1000
-        );
+      // if the user exists with email is not verified
+      const hashedPassword = await bcrypt.hash(password, 10);
+      existingUserByEmail.password = hashedPassword;
+      existingUserByEmail.verifyCode = verifyCode;
+      existingUserByEmail.verifyCodeExpiry = new Date(
+        Date.now() + 60 * 60 * 1000
+      );
 
-        // save the changes
-        await existingUserByEmail.save();
-      }
-    } else {
+      // save all the changes
+      await existingUserByEmail.save();
+    }
+
+    // if the user does not exists with the email
+    else {
       // hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // generate the verify code expiry
-      const codeExpiry = new Date();
-      codeExpiry.setHours(codeExpiry.getHours() + 1);
+      // generate a verify code expiry
+      const verifyCodeExpiry = new Date();
+      verifyCodeExpiry.setHours(verifyCodeExpiry.getHours() + 1);
 
-      // create an entry for user in db
+      // create a user for entry in db
       await UserModel.create({
         username,
         email,
         password: hashedPassword,
-        verifyCode: code,
-        verifyCodeExpiry: codeExpiry,
-        messages: [],
+        verifyCode,
+        verifyCodeExpiry,
       });
     }
 
-    // send the verification email
-    const emailResponse = await sendVerificationEmail(email, username, code);
+    // send the verification email to the user
+    const emailResponse = await sendVerificationEmail(
+      email,
+      username,
+      verifyCode
+    );
 
-    // if the email is not sent successfully
+    // check if the email is successfully sent to the user or not
     if (!emailResponse.success) {
       return NextResponse.json(
         {
           success: false,
           message: emailResponse.message,
         },
-        { status: 500 }
+        { status: 400 }
       );
     }
 
@@ -104,16 +106,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "User is registered successfully. Please verify your email",
+        message: `User is registered successfully. Please verify your account`,
       },
       { status: 200 }
     );
   } catch (err: unknown) {
-    // getting the error message
     const errMsg = (err as Error).message;
-    console.error("Error while registering the user", errMsg);
-
-    // returning the error response
+    console.error("Something went wrong while registering the user", errMsg);
     return NextResponse.json(
       {
         success: false,

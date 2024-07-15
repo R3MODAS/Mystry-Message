@@ -15,7 +15,7 @@ async function connectDB(): Promise<void> {
   }
   try {
     // If the db is not connected
-    const db = await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`);
+    const db = await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`);
     connection.isConnected = db.connections[0].readyState;
     console.log(
       `MongoDB is connected successfully !! DB Host: ${db.connection.host}`
