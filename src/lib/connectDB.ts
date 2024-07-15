@@ -1,4 +1,4 @@
-import { DB_NAME } from "@/helpers/constants";
+import { DB_NAME } from "@/utils/constants";
 import mongoose from "mongoose";
 
 type ConnectionObject = {
