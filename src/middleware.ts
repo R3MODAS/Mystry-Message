@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   // Redirect to dashboard if the user is already authenticated and trying to access signin, signup, verify or home page
   if (
     token &&
-    (url.pathname.startsWith("/signin") ||
+    (url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/signup") ||
       url.pathname.startsWith("/verify") ||
       url.pathname.startsWith("/"))
@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
   // Redirect to signin if the user is not authenticated and trying to access dashboard page
   if (!token && url.pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/signin", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
@@ -31,5 +31,5 @@ export async function middleware(request: NextRequest) {
 
 // Paths or routes
 export const config = {
-  matcher: ["/", "/signin", "/signup", "/dashboard/:path*", "/verify/:path*"],
+  matcher: ["/", "/login", "/signup", "/dashboard/:path*", "/verify/:path*"],
 };
