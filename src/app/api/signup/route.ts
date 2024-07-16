@@ -7,7 +7,7 @@ import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
   // connect to db
-  connectDB();
+  await connectDB();
 
   try {
     // get data from request body
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (err: unknown) {
     const errMsg = (err as Error).message;
-    console.error("Something went wrong while registering the user", errMsg);
+    console.error("Something went wrong while registering the user");
     return NextResponse.json(
       {
         success: false,

@@ -42,6 +42,7 @@ const userSchema: Schema<User> = new Schema(
       required: [true, "Please enter a username"],
       unique: true,
       trim: true,
+      lowercase: true,
     },
     email: {
       type: String,
@@ -60,8 +61,9 @@ const userSchema: Schema<User> = new Schema(
     },
     verifyCode: {
       type: String,
-      required: [true, "Please enter a verify code"],
       trim: true,
+      unique: true,
+      required: true,
     },
     verifyCodeExpiry: {
       type: Date,
