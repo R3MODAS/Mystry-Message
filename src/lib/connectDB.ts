@@ -1,27 +1,28 @@
 import { DB_NAME } from "@/utils/constants";
 import mongoose from "mongoose";
 
-type ConnectionObject = {
+interface Connection {
   isConnected?: number;
-};
-
-const connection: ConnectionObject = {};
+}
+const connection: Connection = {};
 
 async function connectDB(): Promise<void> {
-  // If the db is already connected
+  // check if the db is already connected or not
   if (connection.isConnected) {
-    console.log("Already connected to MongoDB");
+    console.log(`Already connected to MongoDB !!`);
     return;
   }
+
+  // if the db is not connected
   try {
-    // If the db is not connected
     const db = await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`);
     connection.isConnected = db.connections[0].readyState;
     console.log(
       `MongoDB is connected successfully !! DB Host: ${db.connection.host}`
     );
-  } catch (err: any) {
-    console.log(`Failed to connect to MongoDB`, err.message);
+  } catch (err: unknown) {
+    const errMsg = (err as Error).message;
+    console.log(`Failed to connect to MongoDB: `, errMsg);
     process.exit(1);
   }
 }
