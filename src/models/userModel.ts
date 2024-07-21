@@ -1,13 +1,13 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-// Type definition for message Schema
+// Type definition for message schema
 export interface Message extends Document {
   content: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Defining message schema
+// Schema definition for message
 const messageSchema: Schema<Message> = new Schema(
   {
     content: {
@@ -26,27 +26,27 @@ export interface User extends Document {
   email: string;
   password: string;
   isVerified: boolean;
-  verifyOtp: string;
-  verifyOtpExpiry: Date;
   isAcceptingMessages: boolean;
   messages: Message[];
+  verifyOtp: string;
+  verifyOtpExpiry: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// Defining user schema
+// Schema definition for user
 const userSchema: Schema<User> = new Schema(
   {
     username: {
       type: String,
       required: [true, "Please enter an username"],
+      trim: true,
       unique: true,
       lowercase: true,
-      trim: true,
     },
     name: {
       type: String,
-      required: [true, "Please enter a fullname"],
+      required: [true, "Please enter a name"],
       min: [6, "Name should be atleast 3 characters"],
       max: [20, "Name should not exceed 20 characters"],
       trim: true,
@@ -70,20 +70,20 @@ const userSchema: Schema<User> = new Schema(
       type: Boolean,
       default: false,
     },
-    verifyOtp: {
-      type: String,
-      required: [true, "Please enter the verify otp"],
-      unique: true,
-    },
-    verifyOtpExpiry: {
-      type: Date,
-      required: [true, "Please enter the verify otp expiry"],
-    },
     isAcceptingMessages: {
       type: Boolean,
       default: true,
     },
     messages: [messageSchema],
+    verifyOtp: {
+      type: String,
+      required: [true, "Please enter the verify otp"],
+      trim: true,
+    },
+    verifyOtpExpiry: {
+      type: Date,
+      required: [true, "Please enter the verify otp expiry"],
+    },
   },
   { timestamps: true }
 );

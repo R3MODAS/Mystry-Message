@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/models/userModel";
-import bcrypt from "bcryptjs";
 import otpGenerator from "otp-generator";
-import sendVerificationEmail from "@/utils/sendVerificationEmail";
+import bcrypt from "bcryptjs";
+import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 
 export async function POST(request: NextRequest) {
   // connect to db
@@ -28,13 +28,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // check if the user with email exists in the db or not
+    // check if the user with the email exists in the db or not
     const existingUserByEmail = await UserModel.findOne({ email });
 
-    // generate the verify otp
+    // generate the otp
     const verifyOtp = otpGenerator.generate(6, {
-      lowerCaseAlphabets: false,
       specialChars: false,
+      lowerCaseAlphabets: false,
       upperCaseAlphabets: false,
     });
 
@@ -45,19 +45,22 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            message: "User is already registered",
+            message: "User is already registered with this email",
           },
           { status: 400 }
         );
-      } else {
+      }
+
+      // if the user with the email is not verified then
+      else {
         // hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // update the user data
+        // update the data
         existingUserByEmail.password = hashedPassword;
         existingUserByEmail.verifyOtp = verifyOtp;
         existingUserByEmail.verifyOtpExpiry = new Date(
-          Date.now() + 15 * 60 * 10000
+          Date.now() + 60 * 60 * 1000
         );
         await existingUserByEmail.save();
       }
@@ -65,11 +68,12 @@ export async function POST(request: NextRequest) {
 
     // if the user with the email does not exists
     else {
-      // generate the verify otp expiry
-      const verifyOtpExpiry = new Date(Date.now() + 15 * 60 * 10000);
-
       // hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
+
+      // generate the otp expiry
+      const verifyOtpExpiry = new Date();
+      verifyOtpExpiry.setHours(verifyOtpExpiry.getHours() + 1);
 
       // create an entry for user in db
       await UserModel.create({
@@ -93,7 +97,7 @@ export async function POST(request: NextRequest) {
     if (!emailResponse.success) {
       return NextResponse.json(
         {
-          success: false,
+          success: emailResponse.success,
           message: emailResponse.message,
         },
         { status: 400 }
@@ -110,6 +114,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (err: unknown) {
     const errMsg = (err as Error).message;
+    console.error(errMsg);
     return NextResponse.json(
       {
         success: false,

@@ -2,15 +2,15 @@ import { Resend } from "resend";
 import VerificationEmail from "../../emails/verificationEmail";
 import { ApiResponse } from "@/types/ApiResponse";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sendVerificationEmail = async (
+export async function sendVerificationEmail(
   username: string,
   email: string,
   verifyOtp: string
-): Promise<ApiResponse> => {
+): Promise<ApiResponse> {
   try {
-    // send the email
+    // send the mail
     await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
       to: email,
@@ -21,12 +21,11 @@ const sendVerificationEmail = async (
     // return the response
     return {
       success: true,
-      message: "Verification email has been sent successfully",
+      message: "Verification email is sent successfully",
     };
-  } catch (err) {
+  } catch (err: unknown) {
     const errMsg = (err as Error).message;
-    return { success: false, message: errMsg };
+    console.error(errMsg);
+    return { success: false, message: "Failed to send the verification email" };
   }
-};
-
-export default sendVerificationEmail;
+}
