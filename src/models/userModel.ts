@@ -28,8 +28,8 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessages: boolean;
   messages: Message[];
-  verifyOtp: string;
-  verifyOtpExpiry: Date;
+  otp: number | undefined;
+  otpExpiry: Date | undefined;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -75,12 +75,11 @@ const userSchema: Schema<User> = new Schema(
       default: true,
     },
     messages: [messageSchema],
-    verifyOtp: {
-      type: String,
+    otp: {
+      type: Number,
       required: [true, "Please enter the verify otp"],
-      trim: true,
     },
-    verifyOtpExpiry: {
+    otpExpiry: {
       type: Date,
       required: [true, "Please enter the verify otp expiry"],
     },

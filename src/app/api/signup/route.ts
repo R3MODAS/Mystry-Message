@@ -32,11 +32,13 @@ export async function POST(request: NextRequest) {
     const existingUserByEmail = await UserModel.findOne({ email });
 
     // generate the otp
-    const verifyOtp = otpGenerator.generate(6, {
-      specialChars: false,
-      lowerCaseAlphabets: false,
-      upperCaseAlphabets: false,
-    });
+    const otp = Number(
+      otpGenerator.generate(6, {
+        specialChars: false,
+        lowerCaseAlphabets: false,
+        upperCaseAlphabets: false,
+      })
+    );
 
     // if the user with the email exists
     if (existingUserByEmail) {
@@ -58,10 +60,8 @@ export async function POST(request: NextRequest) {
 
         // update the data
         existingUserByEmail.password = hashedPassword;
-        existingUserByEmail.verifyOtp = verifyOtp;
-        existingUserByEmail.verifyOtpExpiry = new Date(
-          Date.now() + 60 * 60 * 1000
-        );
+        existingUserByEmail.otp = otp;
+        existingUserByEmail.otpExpiry = new Date(Date.now() + 60 * 60 * 1000);
         await existingUserByEmail.save();
       }
     }
@@ -72,8 +72,8 @@ export async function POST(request: NextRequest) {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // generate the otp expiry
-      const verifyOtpExpiry = new Date();
-      verifyOtpExpiry.setHours(verifyOtpExpiry.getHours() + 1);
+      const otpExpiry = new Date();
+      otpExpiry.setHours(otpExpiry.getHours() + 1);
 
       // create an entry for user in db
       await UserModel.create({
@@ -81,8 +81,8 @@ export async function POST(request: NextRequest) {
         name,
         email,
         password: hashedPassword,
-        verifyOtp,
-        verifyOtpExpiry,
+        otp,
+        otpExpiry
       });
     }
 
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     const emailResponse = await sendVerificationEmail(
       username,
       email,
-      verifyOtp
+      otp
     );
 
     // check if the email is sent successfully or not

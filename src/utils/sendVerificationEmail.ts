@@ -7,7 +7,7 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendVerificationEmail(
   username: string,
   email: string,
-  verifyOtp: string
+  otp: number
 ): Promise<ApiResponse> {
   try {
     // send the mail
@@ -15,7 +15,7 @@ export async function sendVerificationEmail(
       from: "Acme <onboarding@resend.dev>",
       to: email,
       subject: "Mystry Message | Verification Code",
-      react: VerificationEmail(username, verifyOtp),
+      react: VerificationEmail(username, otp),
     });
 
     // return the response

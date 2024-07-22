@@ -10,7 +10,7 @@ import {
   Button,
 } from "@react-email/components";
 
-async function VerificationEmail(username: string, verifyOtp: string) {
+async function VerificationEmail(username: string, otp: number) {
   return (
     <Html lang="en" dir="ltr">
       <Head>
@@ -26,7 +26,7 @@ async function VerificationEmail(username: string, verifyOtp: string) {
           fontStyle="normal"
         />
       </Head>
-      <Preview>Here&apos;s your verification code: {verifyOtp}</Preview>
+      <Preview>Here&apos;s your verification code: {otp.toString()}</Preview>
       <Section>
         <Row>
           <Heading as="h2">Hello {username},</Heading>
@@ -38,7 +38,7 @@ async function VerificationEmail(username: string, verifyOtp: string) {
           </Text>
         </Row>
         <Row>
-          <Text>{verifyOtp}</Text>
+          <Text>{otp}</Text>
         </Row>
         <Row>
           <Text>
