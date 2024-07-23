@@ -2,7 +2,7 @@
 
 import { useSession, signIn, signOut } from "next-auth/react";
 
-const Login = () => {
+const Signin = () => {
   const { data: session } = useSession();
   if (session) {
     return (
@@ -28,4 +28,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;
