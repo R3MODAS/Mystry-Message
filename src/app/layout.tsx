@@ -6,20 +6,20 @@ import AuthProvider from "@/context/AuthProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mystry Message",
-  description: "Real feedback from real people.",
+    title: "Mystry Message",
+    description: "Real feedback from real people.",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <AuthProvider>
-        <body className={inter.className}>{children}</body>
-      </AuthProvider>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <AuthProvider>
+                <body className={inter.className}>{children}</body>
+            </AuthProvider>
+        </html>
+    );
 }
