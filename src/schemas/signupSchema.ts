@@ -7,7 +7,10 @@ export const usernameValidation = z
     .regex(/^[a-zA-Z0-9_]+$/, {
         message: "Username can only contain letters, numbers, and underscores.",
     })
-    .trim();
+    .trim()
+    .refine((val) => val === val.toLowerCase(), {
+        message: "Username must be lowercase",
+    });
 
 export const signupSchema = z.object({
     username: usernameValidation,

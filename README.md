@@ -59,6 +59,7 @@ Welcome to the Mystery Message App! This application allows users to send anonym
 
 ## Project Structure
 
+```bash
 /Mystry-Message
 ├── emails
 ├── public
@@ -85,6 +86,7 @@ Welcome to the Mystery Message App! This application allows users to send anonym
 ├── tailwind.config.ts
 ├── tsconfig.json
 └── yarn.lock
+```
 
 ## Usage
 

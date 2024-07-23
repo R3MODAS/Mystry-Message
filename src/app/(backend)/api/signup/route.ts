@@ -117,7 +117,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                message: errMsg,
+                message: "Something went wrong while registering the user",
+                error: errMsg,
             },
             { status: 500 }
         );

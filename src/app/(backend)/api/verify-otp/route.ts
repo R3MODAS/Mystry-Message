@@ -61,7 +61,8 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                message: errMsg,
+                message: "Something went wrong while verifying the otp",
+                error: errMsg,
             },
             { status: 500 }
         );
