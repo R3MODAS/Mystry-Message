@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     try {
         // get data from request body
-        const { username, name, email, password } = await request.json();
+        const { username, email, password } = await request.json();
 
         // check if the verified user with username exists in the db or not
         const existingUserVerifiedByUsername = await UserModel.findOne({
@@ -80,7 +80,6 @@ export async function POST(request: NextRequest) {
             // create an entry for user in db
             await UserModel.create({
                 username,
-                name,
                 email,
                 password: hashedPassword,
                 otp,

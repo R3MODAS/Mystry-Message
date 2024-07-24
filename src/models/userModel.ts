@@ -22,7 +22,6 @@ const messageSchema: Schema<Message> = new Schema(
 // Type definition for user schema
 export interface User extends Document {
     username: string;
-    name: string;
     email: string;
     password: string;
     isVerified: boolean;
@@ -43,13 +42,6 @@ const userSchema: Schema<User> = new Schema(
             trim: true,
             unique: true,
             lowercase: true,
-        },
-        name: {
-            type: String,
-            required: [true, "Please enter a name"],
-            min: [6, "Name should be atleast 3 characters"],
-            max: [20, "Name should not exceed 20 characters"],
-            trim: true,
         },
         email: {
             type: String,

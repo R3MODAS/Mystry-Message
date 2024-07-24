@@ -62,12 +62,9 @@ const Signup = () => {
     }, [debouncedUsername]);
 
     const onSubmit = async (data: signUpSchemaType) => {
-        setIsSubmitting(true)
+        setIsSubmitting(true);
         try {
-            
-        } catch (err) {
-            
-        }
+        } catch (err) {}
     };
 
     return <div>Signup</div>;
