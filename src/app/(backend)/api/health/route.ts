@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
             {
                 success: true,
-                message: "Api Endpoints working !!!",
+                message: "Api endpoints are working ✔",
             },
             { status: 200 }
         );
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                message: "Something went wrong",
+                message: "Something went wrong while checking the api endpoint",
                 error: errMsg,
             },
             { status: 500 }

@@ -5,7 +5,7 @@ export const usernameValidation = z
     .min(6, { message: "Username must be atleast 6 characters" })
     .max(20, { message: "Username must not exceed 20 characters" })
     .regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Username can only contain letters, numbers, and underscores.",
+        message: "Username must not contain special characters",
     })
     .trim()
     .refine((val) => val === val.toLowerCase(), {

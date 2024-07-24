@@ -14,34 +14,33 @@ export async function PUT(request: NextRequest) {
         const decodedUsername = decodeURIComponent(username);
 
         // check if the user exists in the db or not
-        let user = await UserModel.findOne({ username: decodedUsername });
+        const user = await UserModel.findOne({ username: decodedUsername });
         if (!user) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "User is not registered",
+                    message: "User is not found",
                 },
                 { status: 400 }
             );
         }
 
-        // verification of otp
-        user = await UserModel.findOne({
+        // validation of otp
+        const isValidOtp = await UserModel.findOne({
             otp,
             otpExpiry: { $gt: Date.now() },
         });
-        if (!user) {
+        if (!isValidOtp) {
             return NextResponse.json(
                 {
-                    success: true,
-                    message:
-                        "Invalid code or code has expired. Please sign up to get a new code",
+                    success: false,
+                    message: "Invalid otp or otp has expired",
                 },
                 { status: 401 }
             );
         }
 
-        // verify the user and save the changes
+        // update the user data
         user.isVerified = true;
         user.otp = undefined;
         user.otpExpiry = undefined;

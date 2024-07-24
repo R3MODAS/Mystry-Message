@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/models/userModel";
-import otpGenerator from "otp-generator";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
+import otpGenerator from "otp-generator";
 
 export async function POST(request: NextRequest) {
     // connect to db
@@ -28,37 +28,37 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // check if the user with the email exists in the db or not
+        // check if the user with email exists in the db or not
         const existingUserByEmail = await UserModel.findOne({ email });
 
         // generate the otp
         const otp = Number(
             otpGenerator.generate(6, {
-                specialChars: false,
                 lowerCaseAlphabets: false,
+                specialChars: false,
                 upperCaseAlphabets: false,
             })
         );
 
-        // if the user with the email exists
+        // if the user with email exists
         if (existingUserByEmail) {
-            // check if the user with the email is verified or not
+            // check if the user with email is verified or not
             if (existingUserByEmail.isVerified) {
                 return NextResponse.json(
                     {
                         success: false,
-                        message: "User is already registered with this email",
+                        message: "User is already registered",
                     },
                     { status: 400 }
                 );
             }
 
-            // if the user with the email is not verified then
+            // if the user with email is not verified
             else {
                 // hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
 
-                // update the data
+                // update the user data and save the changes
                 existingUserByEmail.password = hashedPassword;
                 existingUserByEmail.otp = otp;
                 existingUserByEmail.otpExpiry = new Date(
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
             }
         }
 
-        // if the user with the email does not exists
+        // if the user with email does not exists
         else {
             // hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -88,14 +88,12 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        // send the verification email
+        // check if the verification email is sent successfully or not
         const emailResponse = await sendVerificationEmail(username, email, otp);
-
-        // check if the email is sent successfully or not
         if (!emailResponse.success) {
             return NextResponse.json(
                 {
-                    success: emailResponse.success,
+                    success: false,
                     message: emailResponse.message,
                 },
                 { status: 400 }

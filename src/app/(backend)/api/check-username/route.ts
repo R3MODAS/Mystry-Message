@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import UserModel from "@/models/userModel";
-import { z } from "zod";
-import { usernameValidation } from "@/schemas/signupSchema";
 import connectDB from "@/lib/connectDB";
+import UserModel from "@/models/userModel";
+import { usernameValidation } from "@/schemas/signupSchema";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
-const usernameQuerySchema = z.object({
+const usernameSchema = z.object({
     username: usernameValidation,
 });
 
@@ -18,35 +18,31 @@ export async function GET(request: NextRequest) {
             username: request.nextUrl.searchParams.get("username"),
         };
 
-        // validation of username
-        const result = usernameQuerySchema.safeParse(queryParam);
+        // validation of data
+        const result = usernameSchema.safeParse(queryParam);
         if (!result.success) {
-            // get the errors
-            const usernameErrors =
-                result.error.format()?.username?._errors || [];
-
-            // return the error response
+            const usernameError = result.error.format().username?._errors || [];
             return NextResponse.json(
                 {
-                    success: true,
+                    success: false,
                     message:
-                        usernameErrors.length > 0
-                            ? usernameErrors.join(", ")
-                            : "Invalid query params",
+                        usernameError.length > 0
+                            ? usernameError.join(", ")
+                            : "Invalid query parameter",
                 },
                 { status: 400 }
             );
         }
 
-        // get the data from the validation
+        // get the username from the validated data
         const { username } = result.data;
 
-        // check if the verified username exists in the db or not
-        const existingUserVerifiedByUsername = await UserModel.findOne({
+        // check if the verified user with username exists in the db or not
+        const existingVerifiedUserByUsername = await UserModel.findOne({
             username,
             isVerified: true,
         });
-        if (existingUserVerifiedByUsername) {
+        if (existingVerifiedUserByUsername) {
             return NextResponse.json(
                 {
                     success: false,
@@ -58,7 +54,10 @@ export async function GET(request: NextRequest) {
 
         // return the response
         return NextResponse.json(
-            { success: true, message: "Username is available" },
+            {
+                success: true,
+                message: "Username is unique",
+            },
             { status: 200 }
         );
     } catch (err: unknown) {
