@@ -7,7 +7,7 @@ import otpGenerator from "otp-generator";
 
 export async function POST(request: NextRequest) {
     // connect to db
-    connectDB();
+    await connectDB();
 
     try {
         // get data from request body

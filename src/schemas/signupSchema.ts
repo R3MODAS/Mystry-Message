@@ -12,13 +12,8 @@ export const usernameValidation = z
         message: "Username must be lowercase",
     });
 
-export const signupSchema = z.object({
+export const signUpSchema = z.object({
     username: usernameValidation,
-    name: z
-        .string()
-        .min(6, { message: "Name must be atleast 6 characters" })
-        .max(100, { message: "Name must not exceed 100 characters" })
-        .trim(),
     email: z
         .string()
         .email({ message: "Please enter a valid email address" })
@@ -36,3 +31,5 @@ export const signupSchema = z.object({
         )
         .trim(),
 });
+
+export type signUpSchemaType = z.infer<typeof signUpSchema>;

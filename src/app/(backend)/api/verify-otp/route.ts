@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(request: NextRequest) {
     // connect to db
-    connectDB();
+    await connectDB();
 
     try {
         // get data from request body

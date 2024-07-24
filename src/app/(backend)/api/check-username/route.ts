@@ -1,6 +1,6 @@
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/models/userModel";
-import { usernameValidation } from "@/schemas/signupSchema";
+import { usernameValidation } from "@/schemas/signUpSchema";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -10,7 +10,7 @@ const usernameSchema = z.object({
 
 export async function GET(request: NextRequest) {
     // connect to db
-    connectDB();
+    await connectDB();
 
     try {
         // get username from query params
