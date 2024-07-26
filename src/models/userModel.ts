@@ -7,12 +7,12 @@ export interface Message extends Document {
     updatedAt: Date;
 }
 
-// Schema definition for message
+// Message schema definition
 const messageSchema: Schema<Message> = new Schema(
     {
         content: {
             type: String,
-            required: [true, "Please enter the content"],
+            required: [true, "Please provide the content"],
             trim: true,
         },
     },
@@ -33,21 +33,22 @@ export interface User extends Document {
     updatedAt: Date;
 }
 
-// Schema definition for user
+// User schema definition
 const userSchema: Schema<User> = new Schema(
     {
         username: {
             type: String,
-            required: [true, "Please enter an username"],
-            trim: true,
+            required: [true, "Please provide an username"],
             unique: true,
             lowercase: true,
+            trim: true,
+            minLength: [6, "Username must be atleast 6 characters"],
+            maxLength: [10, "Username must not exceed 10 characters"],
         },
         email: {
             type: String,
-            required: [true, "Please enter an email"],
+            required: [true, "Please provide an email"],
             trim: true,
-            unique: true,
             match: [
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                 "Please enter a valid email",
@@ -55,8 +56,14 @@ const userSchema: Schema<User> = new Schema(
         },
         password: {
             type: String,
-            required: [true, "Please enter a password"],
+            required: [true, "Please provide a password"],
             trim: true,
+            minlength: [8, "Password must be atleast 8 characters"],
+            maxlength: [20, "Password must not exceed 20 characters"],
+            match: [
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+            ],
         },
         isVerified: {
             type: Boolean,
@@ -69,16 +76,17 @@ const userSchema: Schema<User> = new Schema(
         messages: [messageSchema],
         otp: {
             type: Number,
-            required: [true, "Please enter the verify otp"],
+            required: [true, "Please provide an otp"],
         },
         otpExpiry: {
             type: Date,
-            required: [true, "Please enter the verify otp expiry"],
+            required: [true, "Provide provide the otp expiry"],
         },
     },
     { timestamps: true }
 );
 
+// Model definition for user
 const UserModel =
     (mongoose.models.User as Model<User>) ||
     mongoose.model<User>("User", userSchema);

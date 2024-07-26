@@ -1,35 +1,31 @@
 import { z } from "zod";
 
 export const usernameValidation = z
-    .string()
-    .min(6, { message: "Username must be atleast 6 characters" })
-    .max(20, { message: "Username must not exceed 20 characters" })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-        message: "Username must not contain special characters",
+    .string({
+        required_error: "Please provide an username",
     })
     .trim()
-    .refine((val) => val === val.toLowerCase(), {
-        message: "Username must be lowercase",
-    });
+    .min(6, "Username must be atleast 6 characters")
+    .max(10, "Username must not exceed 10 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username must not contain special characters");
 
 export const signUpSchema = z.object({
     username: usernameValidation,
     email: z
-        .string()
-        .email({ message: "Please enter a valid email address" })
+        .string({
+            required_error: "Please provide an email",
+        })
+        .email("Please provide a valid email")
         .trim(),
     password: z
-        .string()
-        .min(8, { message: "Password must be atleast 8 characters" })
-        .max(100, { message: "Password must not exceed 100 characters" })
+        .string({ required_error: "Please provide a password" })
+        .trim()
+        .min(6, "Password must be atleast 8 characters")
+        .max(20, "Password must not exceed 20 characters")
         .regex(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-            {
-                message:
-                    "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-            }
-        )
-        .trim(),
+            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+        ),
 });
 
 export type signUpSchemaType = z.infer<typeof signUpSchema>;
