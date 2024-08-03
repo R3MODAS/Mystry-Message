@@ -2,11 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
     try {
-        // return the response
         return NextResponse.json(
             {
                 success: true,
-                message: "Api endpoints are working !!",
+                message: "Api endpoints are working successfully 🔥🔥",
             },
             { status: 200 }
         );
@@ -16,7 +15,9 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                message: errMsg,
+                message:
+                    "Something went wrong while checking the server health",
+                error: errMsg,
             },
             { status: 500 }
         );

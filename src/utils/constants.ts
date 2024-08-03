@@ -1,2 +1,3 @@
-const DB_NAME: string = `mystry-message`
-export {DB_NAME}
+const DB_NAME = `mystry-message`;
+
+export { DB_NAME };

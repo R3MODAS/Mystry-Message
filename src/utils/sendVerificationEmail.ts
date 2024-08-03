@@ -19,10 +19,14 @@ export async function sendVerificationEmail(
 
         return {
             success: true,
-            message: "Verification email is sent successfully",
+            message: "Verification Email is sent successfully !!!",
         };
     } catch (err) {
-        const errMsg = (err as Error).message;
-        return { success: false, message: errMsg };
+        console.error("Error while sending verification email", err);
+        return {
+            success: false,
+            message:
+                "Something went wrong while sending the verification email",
+        };
     }
 }

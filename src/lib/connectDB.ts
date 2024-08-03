@@ -7,12 +7,13 @@ interface Connection {
 
 const connection: Connection = {};
 
-async function connectDB(): Promise<void> {
-    if (connection.isConnected) {
-        console.log(`Already connected to MongoDB !!`);
-        return;
-    }
+async function connectDB() {
     try {
+        if (connection.isConnected) {
+            console.log(`Already connected to MongoDB !!`);
+            return;
+        }
+
         const db = await mongoose.connect(
             `${process.env.MONGODB_URL}/${DB_NAME}`
         );
@@ -22,7 +23,7 @@ async function connectDB(): Promise<void> {
         );
     } catch (err) {
         const errMsg = (err as Error).message;
-        console.error(`Failed to connect to MongoDB with error: `, errMsg);
+        console.log(`Failed to connect to MongoDB with err: `, errMsg);
         process.exit(1);
     }
 }

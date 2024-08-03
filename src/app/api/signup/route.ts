@@ -1,147 +1,117 @@
-import UserModel from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import otpGenerator from "otp-generator";
-import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 import connectDB from "@/lib/connectDB";
-import { signUpSchema } from "@/schemas/signUpSchema";
+import UserModel from "@/models/userModel";
+import otpGenerator from "otp-generator";
+import bcrypt from "bcryptjs";
+import { sendVerificationEmail } from "@/utils/sendVerificationEmail";
 
 export async function POST(request: NextRequest) {
-    // connect to db
+    // connection to db
     await connectDB();
 
     try {
         // get data from request body
-        const requestBodyData = await request.json();
+        const { username, email, password } = await request.json();
 
-        // validation of data
-        const result = signUpSchema.safeParse(requestBodyData);
-        if (!result.success) {
-            // format the error
-            const errFormat = result.error.format();
-
-            // create an array of errors
-            const errors = [
-                ...(errFormat.username?._errors || []),
-                ...(errFormat.email?._errors || []),
-                ...(errFormat.password?._errors || []),
-            ];
-
-            // return the errors
+        // check if the user is verified by username exists in the db or not
+        const existingUserVerifiedByUsername = await UserModel.findOne({
+            username,
+            isVerified: true,
+        });
+        if (existingUserVerifiedByUsername) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: errors,
+                    message: "Username is already taken",
                 },
-                { status: 500 }
+                { status: 400 }
             );
-        } else {
-            // get the validated data
-            const { username, email, password } = result.data;
+        }
 
-            // check if the user verified with username exists in the db or not
-            const existingUserVerifiedByUsername = await UserModel.findOne({
-                username,
-                isVerified: true,
-            });
-            if (existingUserVerifiedByUsername) {
+        // check if the user with email exists in the db or not
+        const existingUserByEmail = await UserModel.findOne({ email });
+
+        // generate a verify otp
+        const otp = Number(
+            otpGenerator.generate(6, {
+                lowerCaseAlphabets: false,
+                specialChars: false,
+                upperCaseAlphabets: false,
+            })
+        );
+
+        // if the user with email exists
+        if (existingUserByEmail) {
+            // if the user with email is verified
+            if (existingUserByEmail.isVerified) {
                 return NextResponse.json(
                     {
-                        success: true,
-                        message: "Username is already taken",
+                        success: false,
+                        message: "User is already registered",
                     },
                     { status: 400 }
                 );
             }
 
-            // check if the user with email exists in the db or not
-            const existingUserByEmail = await UserModel.findOne({ email });
-
-            // generate an otp
-            const otp = Number(
-                otpGenerator.generate(6, {
-                    lowerCaseAlphabets: false,
-                    specialChars: false,
-                    upperCaseAlphabets: false,
-                })
-            );
-
-            // if the user with email exists
-            if (existingUserByEmail) {
-                // check if the user with email is verified or not
-                if (existingUserByEmail.isVerified) {
-                    return NextResponse.json(
-                        {
-                            success: false,
-                            message: "User is already registered",
-                        },
-                        { status: 400 }
-                    );
-                } else {
-                    // hash the password
-                    const hashedPassword = await bcrypt.hash(password, 10);
-
-                    // update and save the user data
-                    existingUserByEmail.password = hashedPassword;
-                    existingUserByEmail.otp = otp;
-                    existingUserByEmail.otpExpiry = new Date(
-                        Date.now() + 10 * 60 * 1000
-                    );
-                    await existingUserByEmail.save();
-                }
-            }
-
-            // if the user with email does not exists
+            // if the user with email is not verified
             else {
                 // hash the password
                 const hashedPassword = await bcrypt.hash(password, 10);
 
-                // generate the otp expiry
-                const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-
-                // create a new user
-                await UserModel.create({
-                    username,
-                    email,
-                    password: hashedPassword,
-                    otp,
-                    otpExpiry,
-                });
+                // update and save the user
+                existingUserByEmail.password = hashedPassword;
+                existingUserByEmail.verifyOtp = otp;
+                existingUserByEmail.verifyOtpExpiry = new Date(
+                    Date.now() + 15 * 60 * 1000
+                );
+                await existingUserByEmail.save();
             }
+        }
 
-            // check if the mail is sent successfully to the user or not
-            const emailResponse = await sendVerificationEmail(
+        // if user with email doesn't exists
+        else {
+            // hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            // create new user
+            await UserModel.create({
                 username,
                 email,
-                otp
-            );
-            if (!emailResponse.success) {
-                return NextResponse.json(
-                    {
-                        success: emailResponse.success,
-                        message: emailResponse.message,
-                    },
-                    { status: 400 }
-                );
-            }
+                password: hashedPassword,
+                verifyOtp: otp,
+                verifyOtpExpiry: new Date(Date.now() + 15 * 60 * 1000),
+            });
+        }
 
-            // return the response
+        // check if the verification email is sent successfully or not
+        const emailResponse = await sendVerificationEmail(username, email, otp);
+        if (!emailResponse.success) {
             return NextResponse.json(
                 {
-                    success: true,
-                    message:
-                        "User is registered successfully. Please verify your account",
+                    success: emailResponse.success,
+                    message: emailResponse.message,
                 },
-                { status: 200 }
+                { status: 400 }
             );
         }
+
+        // return the response
+        return NextResponse.json(
+            {
+                success: true,
+                message:
+                    "User is registered successfully. Please verify your account",
+            },
+            { status: 201 }
+        );
     } catch (err) {
         const errMsg = (err as Error).message;
         console.error(errMsg);
         return NextResponse.json(
             {
                 success: false,
-                message: errMsg,
+                message: "Something went wrong while registering the user",
+                error: errMsg,
             },
             { status: 500 }
         );
