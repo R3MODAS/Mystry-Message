@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-const signInSchema = yup.object({
+export const signInSchema = yup.object({
     identity: yup
         .string()
         .email("Please provide a valid email")

@@ -9,7 +9,7 @@ export const usernameValidation = yup
     .max(10, "Username must not exceed 10 characters")
     .matches(/^[a-zA-Z0-9_]+$/, "Username must not contain special characters");
 
-const signUpSchema = yup.object({
+export const signUpSchema = yup.object({
     username: usernameValidation,
     email: yup
         .string()
