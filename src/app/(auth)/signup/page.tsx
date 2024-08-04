@@ -2,7 +2,6 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import Link from "next/link";
 import { signUpSchema, signUpSchemaType } from "@/schemas/signUpSchema";
 import axios, { AxiosError } from "axios";
@@ -14,7 +13,6 @@ import { ApiResponse } from "@/types/ApiResponse";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
