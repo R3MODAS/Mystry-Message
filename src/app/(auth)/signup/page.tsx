@@ -3,7 +3,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { signUpSchema, signUpSchemaType } from "@/schemas/signUpSchema";
+import { signupSchema, signupSchemaType } from "@/schemas/signupSchema";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
@@ -32,8 +32,8 @@ const Signup = () => {
     const router = useRouter();
     const { toast } = useToast();
 
-    const form = useForm<signUpSchemaType>({
-        resolver: yupResolver(signUpSchema),
+    const form = useForm<signupSchemaType>({
+        resolver: yupResolver(signupSchema),
         defaultValues: {
             username: "",
             email: "",
@@ -69,7 +69,7 @@ const Signup = () => {
         checkUniqueUsername();
     }, [username]);
 
-    const onSubmit = async (data: signUpSchemaType) => {
+    const onSubmit = async (data: signupSchemaType) => {
         setIsSubmitting(true);
         const { username, email, password } = data;
         const signUpData = { username, email, password };

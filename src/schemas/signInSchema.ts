@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const signInSchema = yup.object({
+export const signinSchema = yup.object({
     identity: yup
         .string()
         .email("Please provide a valid email")
@@ -16,4 +16,4 @@ export const signInSchema = yup.object({
         ),
 });
 
-export type signInSchemaType = yup.InferType<typeof signInSchema>;
+export type signinSchemaType = yup.InferType<typeof signinSchema>;

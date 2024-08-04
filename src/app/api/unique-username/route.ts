@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/connectDB";
 import * as yup from "yup";
-import { usernameValidation } from "@/schemas/signUpSchema";
 import UserModel from "@/models/userModel";
+import { usernameValidation } from "@/schemas/signupSchema";
 
 const usernameSchema = yup.object({
     username: usernameValidation,
