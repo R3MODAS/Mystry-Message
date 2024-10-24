@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { hash } from "bcrypt";
-import { randomInt } from "crypto";
 import { UserModel } from "@/models/user";
-import { SignupSchema } from "@/schemas/auth";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { connectMongoDB } from "@/utils/mongodb";
-import { EXPIRY_TIME } from "@/utils/constants";
-import { sendMail } from "@/utils/sendMail";
+import { hash } from "bcrypt";
+import { BackendSignupSchema, BackendSignupType } from "@/schemas/signup";
 
 export const POST = AsyncHandler(async (req: NextRequest) => {
     // Connect to db
     await connectMongoDB();
 
     // Get data from request body
-    const { username, email, password } = (await req.json()) as SignupSchema;
+    const requestBodyData = (await req.json()) as BackendSignupType;
 
-    // Check if the user with username is already verified or not
+    // Validation of data
+    const { username, email, password } =
+        await BackendSignupSchema.parseAsync(requestBodyData);
+
+    // Check if the user with username is verified or not
     const existingUserVerifiedByUsername = await UserModel.findOne({
         username,
         isVerified: true
@@ -24,62 +25,32 @@ export const POST = AsyncHandler(async (req: NextRequest) => {
         throw new ErrorHandler("Username is already taken", 409);
     }
 
-    // Check if the user with email exists in the db or not
+    // Check if the user with email already exists in the db or not
     const userExists = await UserModel.findOne({ email });
-
-    // Generate the verify otp
-    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0");
-
-    // If the user with email exists
     if (userExists) {
-        // If the user with email is verified
-        if (userExists.isVerified) {
-            throw new ErrorHandler("User is already verified", 409);
-        }
-
-        // If the user with email is not verified
-        else {
-            // Hash the password
-            const hashedPassword = await hash(password, 10);
-
-            // Create new user
-            await UserModel.create({
-                username,
-                email,
-                password: hashedPassword,
-                verifyOtp,
-                verifyOtpExpiry: new Date(Date.now() + EXPIRY_TIME * 1000)
-            });
-        }
+        throw new ErrorHandler("User already exists, Please Login", 409);
     }
 
-    // If the user with email does not exists
-    else {
-        // Hash the password
-        const hashedPassword = await hash(password, 10);
+    // Hash the password
+    const hashedPassword = await hash(password, 10);
 
-        // Create new user
-        await UserModel.create({
-            username,
-            email,
-            password: hashedPassword,
-            verifyOtp,
-            verifyOtpExpiry: new Date(Date.now() + EXPIRY_TIME * 1000)
-        });
-    }
+    // Create a new user
+    const signupData = await UserModel.create({
+        username,
+        email,
+        password: hashedPassword
+    });
 
-    // Send the verification email
-    const emailResponse = await sendMail({ email, username, otp: verifyOtp });
-    if (!emailResponse.success) {
-        throw new ErrorHandler(emailResponse.message, 400);
-    }
+    // Remove the password and __v
+    signupData.password = undefined!;
+    signupData.__v = undefined!;
 
     // Return the response
     return NextResponse.json(
         {
             success: true,
-            message:
-                "User is registered successfully. Please verify your account"
+            message: "User is registered successfully",
+            data: signupData
         },
         { status: 201 }
     );

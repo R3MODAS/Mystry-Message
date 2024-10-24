@@ -23,7 +23,7 @@ const userSchema: Schema<IUser> = new Schema(
         },
         email: {
             type: String,
-            trim: true,
+            trim: true
         },
         password: {
             type: String,
@@ -39,10 +39,10 @@ const userSchema: Schema<IUser> = new Schema(
         },
         messages: [messageSchema],
         verifyOtp: {
-            type: String,
+            type: String
         },
         verifyOtpExpiry: {
-            type: Date,
+            type: Date
         }
     },
     { timestamps: true }

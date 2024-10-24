@@ -57,9 +57,7 @@ const VerificationEmail = ({ username, otp }: VerificationEmailProps) => {
                         </Text>
                     </Row>
                     <Row>
-                        <Text style={code}>
-                            {otp.toString().split("").join(" ")}
-                        </Text>
+                        <Text style={code}>{otp}</Text>
                     </Row>
                     <Row>
                         <Button
