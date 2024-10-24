@@ -1,3 +1,2 @@
-const DB_NAME = `mystry-message`;
-
-export { DB_NAME };
+export const DB_NAME = "mystry-message",
+    EXPIRY_TIME = 600;
