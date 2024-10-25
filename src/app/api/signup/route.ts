@@ -6,7 +6,7 @@ import { hash } from "bcrypt";
 import { BackendSignupSchema, BackendSignupType } from "@/schemas/signup";
 
 export const POST = AsyncHandler(async (req: NextRequest) => {
-    // Connect to db
+    // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request body

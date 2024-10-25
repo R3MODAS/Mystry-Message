@@ -8,7 +8,7 @@ import {
 } from "@/schemas/verifyotp";
 
 export const PUT = AsyncHandler(async (req: NextRequest) => {
-    // Connect to db
+    // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request query

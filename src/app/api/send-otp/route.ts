@@ -8,7 +8,7 @@ import { sendMail } from "@/utils/sendMail";
 import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/sendotp";
 
 export const GET = AsyncHandler(async (req: NextRequest) => {
-    // Connect to db
+    // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request query
