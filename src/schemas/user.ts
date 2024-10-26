@@ -1,4 +1,11 @@
 import { z } from "zod";
+import { usernameSchema } from "./common";
+
+// Check unique username schema
+export const UniqueUsernameSchema = z.object({
+    username: usernameSchema
+});
+export type UniqueUsernameSchemaType = z.infer<typeof UniqueUsernameSchema>;
 
 // Message schema
 export const MessageSchema = z.object({

@@ -5,19 +5,21 @@ import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { connectMongoDB } from "@/utils/mongodb";
 import { EXPIRY_TIME } from "@/utils/constants";
 import { sendMail } from "@/utils/sendMail";
-import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/sendotp";
+import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/auth";
 
 export const GET = AsyncHandler(async (req: NextRequest) => {
     // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request query
+    const { searchParams } = new URL(req.nextUrl);
+
     const requestQueryData = {
-        userid: req.nextUrl.searchParams.get("userid")
+        userid: searchParams.get("userid")
     } as SendOtpSchemaType;
 
     // Validation of data
-    const { userid } = await SendOtpSchema.parseAsync(requestQueryData);
+    const { userid } = SendOtpSchema.parse(requestQueryData);
 
     // Check if the user exists in the db or not
     const userExists = await UserModel.findById(userid);

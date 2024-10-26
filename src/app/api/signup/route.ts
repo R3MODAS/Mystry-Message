@@ -3,7 +3,7 @@ import { UserModel } from "@/models/user";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { connectMongoDB } from "@/utils/mongodb";
 import { hash } from "bcrypt";
-import { BackendSignupSchema, BackendSignupType } from "@/schemas/signup";
+import { BackendSignupSchema, BackendSignupType } from "@/schemas/auth";
 
 export const POST = AsyncHandler(async (req: NextRequest) => {
     // Connection to mongodb
@@ -14,7 +14,7 @@ export const POST = AsyncHandler(async (req: NextRequest) => {
 
     // Validation of data
     const { username, email, password } =
-        await BackendSignupSchema.parseAsync(requestBodyData);
+        BackendSignupSchema.parse(requestBodyData);
 
     // Check if the user with username is verified or not
     const existingUserVerifiedByUsername = await UserModel.findOne({

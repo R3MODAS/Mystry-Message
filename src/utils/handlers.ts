@@ -15,12 +15,10 @@ class ErrorHandler extends Error {
 }
 
 const AsyncHandler =
-    (fn: HandlerFunction) => async (req: NextRequest, params?: any) => {
-        try {
-            return await fn(req, params);
-        } catch (err: any) {
-            return handleError(err);
-        }
+    (fn: HandlerFunction) => (req: NextRequest, params?: any) => {
+        return Promise.resolve(fn(req, params)).catch((err) =>
+            handleError(err)
+        );
     };
 
 const handleError = (err: any) => {

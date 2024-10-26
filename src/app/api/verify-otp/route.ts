@@ -5,7 +5,7 @@ import { connectMongoDB } from "@/utils/mongodb";
 import {
     BackendVerifyOtpSchema,
     BackendVerifyOtpSchemaType
-} from "@/schemas/verifyotp";
+} from "@/schemas/auth";
 
 export const PUT = AsyncHandler(async (req: NextRequest) => {
     // Connection to mongodb
@@ -18,8 +18,7 @@ export const PUT = AsyncHandler(async (req: NextRequest) => {
     } as BackendVerifyOtpSchemaType;
 
     // Validation of data
-    const { userid, otp } =
-        await BackendVerifyOtpSchema.parseAsync(requestQueryData);
+    const { userid, otp } = BackendVerifyOtpSchema.parse(requestQueryData);
 
     // Check if the user exists in the db or not
     const userExists = await UserModel.findById(userid);
