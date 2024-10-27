@@ -4,13 +4,11 @@ import WhyChooseSection from "@/components/home/WhyChoose";
 
 const HomePage = () => {
     return (
-        <div className="min-h-screen bg-[#050b1f] text-white flex flex-col">
-            <main className="flex-grow pt-20">
-                <BannerSection />
-                <WhyChooseSection />
-                <AnonymousMessageCarouselSection />
-            </main>
-        </div>
+        <main className="bg-color-1 pt-20">
+            <BannerSection />
+            <WhyChooseSection />
+            <AnonymousMessageCarouselSection />
+        </main>
     );
 };
 

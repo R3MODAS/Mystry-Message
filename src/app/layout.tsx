@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/context/AuthProvider";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import { Toaster } from "react-hot-toast";
 import "@/styles/index.css";
 
 const inter = Inter({
@@ -22,11 +23,18 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${inter.className} antialiased`}>
+            <body
+                className={`${inter.className} antialiased flex flex-col min-h-screen`}
+            >
                 <AuthProvider>
                     <Header />
                     {children}
                     <Footer />
+                    <Toaster
+                        toastOptions={{
+                            position: "top-center"
+                        }}
+                    />
                 </AuthProvider>
             </body>
         </html>

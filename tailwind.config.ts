@@ -8,18 +8,18 @@ const config: Config = {
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}"
     ],
     theme: {
-    	extend: {
-    		colors: {
-    			background: 'var(--background)',
-    			foreground: 'var(--foreground)'
-    		},
-    		borderRadius: {
-    			lg: 'var(--radius)',
-    			md: 'calc(var(--radius) - 2px)',
-    			sm: 'calc(var(--radius) - 4px)'
-    		}
-    	}
+        extend: {
+            colors: {
+                "color-1": "#050b1f",
+                "color-2": "#0d9488",
+                "color-3": "#38bdf8",
+                "color-4": "#e2e8f0",
+                "color-5": "#0b7a6e",
+                "color-6": "#0ea5e9"
+            }
+        }
     },
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     plugins: [require("tailwindcss-animate")]
 };
 export default config;

@@ -7,7 +7,7 @@ const usernameSchema = z
     .string()
     .trim()
     .min(5, "Username must be at least 5 characters")
-    .max(20, "Username must not exceed 20 characters")
+    .max(8, "Username must not exceed 8 characters")
     .regex(
         /^[a-z0-9]+$/,
         "Username can only contain lowercase letters and numbers"

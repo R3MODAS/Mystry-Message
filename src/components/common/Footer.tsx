@@ -4,21 +4,21 @@ import { Input } from "@/components/ui/input";
 
 const Footer = () => {
     return (
-        <footer className="bg-[#0a1836] text-white py-12">
+        <footer className="bg-color-1 text-white py-12 mt-auto">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="space-y-4">
-                        <span className="text-2xl font-bold bg-gradient-to-r from-[#0d9488] to-[#38bdf8] text-transparent bg-clip-text">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-color-2 to-color-3 text-transparent bg-clip-text">
                             Mystry Message
                         </span>
-                        <p className="text-sm text-[#e2e8f0]">
+                        <p className="text-sm text-color-4">
                             Connect anonymously. Share freely.
                         </p>
                         <div className="flex space-x-4">
                             <a
                                 href="#"
                                 aria-label="Facebook"
-                                className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                className="text-color-4 hover:text-color-2 transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -31,7 +31,7 @@ const Footer = () => {
                             <a
                                 href="#"
                                 aria-label="Twitter"
-                                className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                className="text-color-4 hover:text-color-2 transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -44,7 +44,7 @@ const Footer = () => {
                             <a
                                 href="#"
                                 aria-label="Instagram"
-                                className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                className="text-color-4 hover:text-color-2 transition-colors"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -60,11 +60,11 @@ const Footer = () => {
                         <h3 className="text-lg font-semibold mb-4">
                             Quick Links
                         </h3>
-                        <ul className="space-y-2">
+                        <ul className="space-y-4">
                             <li>
                                 <Link
                                     href="/about"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     About
                                 </Link>
@@ -72,7 +72,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/features"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Features
                                 </Link>
@@ -80,7 +80,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/pricing"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Pricing
                                 </Link>
@@ -88,7 +88,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/blog"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Blog
                                 </Link>
@@ -97,11 +97,11 @@ const Footer = () => {
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold mb-4">Support</h3>
-                        <ul className="space-y-2">
+                        <ul className="space-y-4">
                             <li>
                                 <Link
                                     href="/faq"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     FAQ
                                 </Link>
@@ -109,7 +109,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/contact"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Contact
                                 </Link>
@@ -117,7 +117,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/privacy"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Privacy Policy
                                 </Link>
@@ -125,7 +125,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     href="/terms"
-                                    className="text-[#e2e8f0] hover:text-[#0d9488] transition-colors"
+                                    className="text-color-4 hover:text-color-2 transition-colors"
                                 >
                                     Terms of Service
                                 </Link>
@@ -136,25 +136,25 @@ const Footer = () => {
                         <h3 className="text-lg font-semibold mb-4">
                             Newsletter
                         </h3>
-                        <p className="text-sm text-[#e2e8f0] mb-4">
+                        <p className="text-sm text-color-4 mb-4">
                             Stay updated with our latest features and releases.
                         </p>
                         <form className="flex">
                             <Input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="bg-white/10 border-[#0d9488]/20 text-white placeholder-[#e2e8f0]/50 focus:border-[#0d9488]"
+                                className="bg-white/10 border-color-2/20 text-white placeholder-color-4/50 focus:border-color-2"
                             />
                             <Button
                                 type="submit"
-                                className="ml-2 bg-[#0d9488] hover:bg-[#0b7a6e] text-white"
+                                className="ml-2 bg-color-2 hover:bg-color-5 text-white"
                             >
                                 Subscribe
                             </Button>
                         </form>
                     </div>
                 </div>
-                <div className="mt-8 pt-8 border-t border-[#e2e8f0]/10 text-center text-sm text-[#e2e8f0]">
+                <div className="mt-8 pt-8 border-t border-color-4/10 text-center text-sm text-color-4">
                     © {new Date().getFullYear()} Mystry Message. All rights
                     reserved.
                 </div>

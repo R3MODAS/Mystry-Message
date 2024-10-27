@@ -7,7 +7,6 @@ import {
     Row,
     Section,
     Text,
-    Button,
     Container
 } from "@react-email/components";
 
@@ -60,14 +59,6 @@ const VerificationEmail = ({ username, otp }: VerificationEmailProps) => {
                         <Text style={code}>{otp}</Text>
                     </Row>
                     <Row>
-                        <Button
-                            href={`http://localhost:3000/verify/${username}`}
-                            style={button}
-                        >
-                            Unlock Your Account
-                        </Button>
-                    </Row>
-                    <Row>
                         <Text style={footer}>
                             This message will self-destruct in 10 minutes. Just
                             kidding! But seriously, if you didn&apos;t request
@@ -102,7 +93,7 @@ const container = {
 };
 
 const main = {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#050b1f",
     borderRadius: "8px",
     padding: "40px 32px",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
@@ -112,10 +103,14 @@ const main = {
 const logo = {
     fontSize: "28px",
     fontWeight: "600",
-    color: "#7c3aed",
+    color: "#ffffff",
     textAlign: "center" as const,
-    padding: "0 0 24px",
-    fontFamily: "Inter, Arial, sans-serif"
+    padding: "12px 0",
+    fontFamily: "Inter, Arial, sans-serif",
+    backgroundColor: "#0d9488",
+    backgroundImage: "linear-gradient(90deg, #0d9488, #38bdf8)",
+    width: "100%",
+    marginBottom: "24px"
 };
 
 const header = {
@@ -138,35 +133,21 @@ const greeting = {
 const paragraph = {
     fontSize: "16px",
     lineHeight: "24px",
-    color: "#e5e5e5"
+    color: "#e2e8f0"
 };
 
 const code = {
     display: "block",
     padding: "24px",
     margin: "24px 0",
-    backgroundColor: "#2d2d2d",
+    backgroundColor: "#0a1836",
     borderRadius: "4px",
     fontSize: "32px",
     fontWeight: "600",
     letterSpacing: "8px",
     textAlign: "center" as const,
-    color: "#7c3aed",
-    border: "1px solid #7c3aed"
-};
-
-const button = {
-    backgroundColor: "#7c3aed",
-    borderRadius: "4px",
-    color: "#ffffff",
-    fontSize: "16px",
-    fontWeight: "500",
-    textDecoration: "none",
-    textAlign: "center" as const,
-    display: "block",
-    padding: "12px 24px",
-    margin: "24px 0",
-    border: "none"
+    color: "#0d9488",
+    border: "1px solid #0d9488"
 };
 
 const footer = {
@@ -179,7 +160,7 @@ const footer = {
 const signature = {
     fontSize: "14px",
     lineHeight: "24px",
-    color: "#e5e5e5",
+    color: "#e2e8f0",
     marginTop: "32px"
 };
 

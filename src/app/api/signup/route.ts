@@ -3,14 +3,14 @@ import { UserModel } from "@/models/user";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { connectMongoDB } from "@/utils/mongodb";
 import { hash } from "bcrypt";
-import { BackendSignupSchema, BackendSignupType } from "@/schemas/auth";
+import { BackendSignupSchema, BackendSignupSchemaType } from "@/schemas/auth";
 
 export const POST = AsyncHandler(async (req: NextRequest) => {
     // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request body
-    const requestBodyData = (await req.json()) as BackendSignupType;
+    const requestBodyData = (await req.json()) as BackendSignupSchemaType;
 
     // Validation of data
     const { username, email, password } =

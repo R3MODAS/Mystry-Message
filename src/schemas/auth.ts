@@ -25,11 +25,11 @@ export const FrontendSignupSchema = BaseSignupSchema.extend({
     message: "Password and confirm password does not match",
     path: ["confirmPassword"]
 });
-export type FrontendSignupType = z.infer<typeof FrontendSignupSchema>;
+export type FrontendSignupSchemaType = z.infer<typeof FrontendSignupSchema>;
 
 // Signup schema (backend)
 export const BackendSignupSchema = BaseSignupSchema;
-export type BackendSignupType = z.infer<typeof BackendSignupSchema>;
+export type BackendSignupSchemaType = z.infer<typeof BackendSignupSchema>;
 
 // Send otp schema
 export const SendOtpSchema = z.object({
@@ -43,6 +43,14 @@ export const BackendVerifyOtpSchema = z.object({
     otp: otpSchema
 });
 export type BackendVerifyOtpSchemaType = z.infer<typeof BackendVerifyOtpSchema>;
+
+// Verify otp schema (frontend)
+export const FrontendVerifyOtpSchema = z.object({
+    otp: otpSchema
+});
+export type FrontendVerifyOtpSchemaType = z.infer<
+    typeof FrontendVerifyOtpSchema
+>;
 
 // Login schema
 export const LoginSchema = z.object({
