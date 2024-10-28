@@ -3,21 +3,26 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
 import {
     Form,
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
-    FormMessage
+    FormLabel
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
 import { useSignup } from "@/hooks/auth";
 import { FrontendSignupSchema, FrontendSignupSchemaType } from "@/schemas/auth";
-import { cn } from "@/lib/utils";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useState } from "react";
 
 const SignupPage = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     // Signup logic
     const { handleSignup, isSubmitting } = useSignup();
 
@@ -45,9 +50,9 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-20">
             <div className="w-full max-w-md">
-                {/* Form heading */}
+                {/* Form top */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold mt-6 mb-2">
                         Create an account
@@ -61,7 +66,7 @@ const SignupPage = () => {
                 <Form {...form}>
                     <form
                         onSubmit={handleSubmit(onSignup)}
-                        className="space-y-8"
+                        className="space-y-5"
                     >
                         <FormField
                             control={control}
@@ -69,20 +74,33 @@ const SignupPage = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Username</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            placeholder="Enter your username"
-                                            autoComplete="on"
-                                            {...field}
-                                            className={cn(
-                                                "bg-white/5 border-color-2/20 text-white h-12",
-                                                errors.username &&
-                                                    "border-red-500 focus-visible:ring-red-500"
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                    <div className="relative">
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                placeholder="Enter your username"
+                                                autoComplete="on"
+                                                {...field}
+                                                className={cn(
+                                                    "bg-white/5 border-color-2/20 text-white h-12",
+                                                    errors.username &&
+                                                        "border-red-500 focus-visible:ring-red-500"
+                                                )}
+                                            />
+                                        </FormControl>
+
+                                        {errors.username && (
+                                            <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                                                <ToolTipMessage
+                                                    size={20}
+                                                    message={
+                                                        errors.username
+                                                            ?.message as string
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -92,20 +110,33 @@ const SignupPage = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="email"
-                                            placeholder="Enter your email"
-                                            autoComplete="on"
-                                            {...field}
-                                            className={cn(
-                                                "bg-white/5 border-color-2/20 text-white h-12",
-                                                errors.email &&
-                                                    "border-red-500 focus-visible:ring-red-500"
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                    <div className="relative">
+                                        <FormControl>
+                                            <Input
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                autoComplete="on"
+                                                {...field}
+                                                className={cn(
+                                                    "bg-white/5 border-color-2/20 text-white h-12",
+                                                    errors.email &&
+                                                        "border-red-500 focus-visible:ring-red-500"
+                                                )}
+                                            />
+                                        </FormControl>
+
+                                        {errors.email && (
+                                            <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                                                <ToolTipMessage
+                                                    size={20}
+                                                    message={
+                                                        errors.email
+                                                            ?.message as string
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -115,20 +146,50 @@ const SignupPage = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="Enter your password"
-                                            autoComplete="on"
-                                            {...field}
-                                            className={cn(
-                                                "bg-white/5 border-color-2/20 text-white h-12",
-                                                errors.password &&
-                                                    "border-red-500 focus-visible:ring-red-500"
+                                    <div className="relative">
+                                        <FormControl>
+                                            <Input
+                                                type={
+                                                    showPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                placeholder="Enter your password"
+                                                autoComplete="on"
+                                                {...field}
+                                                className={cn(
+                                                    "bg-white/5 border-color-2/20 text-white h-12",
+                                                    errors.password &&
+                                                        "border-red-500 focus-visible:ring-red-500"
+                                                )}
+                                            />
+                                        </FormControl>
+
+                                        {errors.password && (
+                                            <div className="absolute top-1/2 -translate-y-1/2 right-11">
+                                                <ToolTipMessage
+                                                    size={20}
+                                                    message={
+                                                        errors.password
+                                                            ?.message as string
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                            className="absolute top-1/2 -translate-y-1/2 right-4 cursor-pointer"
+                                        >
+                                            {showPassword ? (
+                                                <EyeIcon size={18} />
+                                            ) : (
+                                                <EyeOffIcon size={18} />
                                             )}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                        </div>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -138,20 +199,52 @@ const SignupPage = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Confirm Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="password"
-                                            placeholder="Confirm your password"
-                                            autoComplete="on"
-                                            {...field}
-                                            className={cn(
-                                                "bg-white/5 border-color-2/20 text-white h-12",
-                                                errors.confirmPassword &&
-                                                    "border-red-500 focus-visible:ring-red-500"
+                                    <div className="relative">
+                                        <FormControl>
+                                            <Input
+                                                type={
+                                                    showConfirmPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                placeholder="Confirm your password"
+                                                autoComplete="on"
+                                                {...field}
+                                                className={cn(
+                                                    "bg-white/5 border-color-2/20 text-white h-12",
+                                                    errors.confirmPassword &&
+                                                        "border-red-500 focus-visible:ring-red-500"
+                                                )}
+                                            />
+                                        </FormControl>
+
+                                        {errors.confirmPassword && (
+                                            <div className="absolute top-1/2 -translate-y-1/2 right-11">
+                                                <ToolTipMessage
+                                                    size={20}
+                                                    message={
+                                                        errors.confirmPassword
+                                                            ?.message as string
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div
+                                            onClick={() =>
+                                                setShowConfirmPassword(
+                                                    !showConfirmPassword
+                                                )
+                                            }
+                                            className="absolute top-1/2 -translate-y-1/2 right-4 cursor-pointer"
+                                        >
+                                            {showConfirmPassword ? (
+                                                <EyeIcon size={18} />
+                                            ) : (
+                                                <EyeOffIcon size={18} />
                                             )}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
+                                        </div>
+                                    </div>
                                 </FormItem>
                             )}
                         />
@@ -164,7 +257,7 @@ const SignupPage = () => {
                 </Form>
 
                 {/* Form bottom */}
-                <p className="mt-6 text-center text-color-4">
+                <p className="mt-6 text-center text-color-4 text-sm">
                     Already have an account?{" "}
                     <Link
                         href="/login"

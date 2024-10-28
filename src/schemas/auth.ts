@@ -54,7 +54,7 @@ export type FrontendVerifyOtpSchemaType = z.infer<
 
 // Login schema
 export const LoginSchema = z.object({
-    identifier: emailSchema,
+    identity: emailSchema,
     password: passwordSchema
 });
 export type LoginSchemaType = z.infer<typeof LoginSchema>;

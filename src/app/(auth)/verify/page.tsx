@@ -8,8 +8,7 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
-    FormMessage
+    FormLabel
 } from "@/components/ui/form";
 import SubmitButton from "@/components/common/SubmitButton";
 import {
@@ -88,7 +87,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={0}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -96,7 +95,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={1}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -104,7 +103,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={2}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -112,7 +111,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={3}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -120,7 +119,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={4}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -128,7 +127,7 @@ const VerifyOtpPage = () => {
                                                 <InputOTPSlot
                                                     index={5}
                                                     className={cn(
-                                                        "bg-white/5 text-base !rounded-none border border-color-2/20 text-white w-16 h-16",
+                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
                                                         errors.otp &&
                                                             "border-red-500 focus-visible:ring-red-500"
                                                     )}
@@ -136,7 +135,6 @@ const VerifyOtpPage = () => {
                                             </InputOTPGroup>
                                         </InputOTP>
                                     </FormControl>
-                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

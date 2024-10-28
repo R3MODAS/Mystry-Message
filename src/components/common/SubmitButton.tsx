@@ -11,7 +11,7 @@ const SubmitButton = ({ isValid, isSubmitting, text }: SubmitButtonProps) => {
     return (
         <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-color-2 to-color-3 hover:from-color-5 hover:to-color-6 text-white h-12 text-base"
+            className="w-full bg-gradient-to-r from-color-2 to-color-3 hover:from-color-5 hover:to-color-6 text-white h-12 text-sm"
             disabled={!isValid || isSubmitting}
         >
             {isSubmitting ? (

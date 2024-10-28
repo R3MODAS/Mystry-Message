@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-import { IMessage, messageSchema } from "./message";
+import { Message, messageSchema } from "./message";
 
 export interface User extends Document {
     username: string;
@@ -9,7 +9,7 @@ export interface User extends Document {
     isAcceptingMessages: boolean;
     verifyOtp: string;
     verifyOtpExpiry: Date;
-    messages: IMessage[];
+    messages: Message[];
     createdAt: Date;
     updatedAt: Date;
 }

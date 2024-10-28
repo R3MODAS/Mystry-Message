@@ -1,4 +1,4 @@
-import { IMessage } from "@/models/message";
+import { Message } from "@/models/message";
 import { NextRequest, NextResponse } from "next/server";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -7,7 +7,7 @@ export interface ApiResponse<T = void> {
     message: string;
     data?: T;
     isAcceptingMessages?: boolean;
-    messages?: IMessage[];
+    messages?: Message[];
 }
 
 export interface IUser {

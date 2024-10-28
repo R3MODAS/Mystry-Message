@@ -10,13 +10,13 @@ export const authOptions: NextAuthOptions = {
             id: "credentials",
             name: "Credentials",
             credentials: {
-                email: { label: "Email", type: "email" },
+                identity: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" }
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async authorize(credentials): Promise<any> {
                 // Validation of data
-                if (!credentials?.email || !credentials?.password) {
+                if (!credentials?.identity || !credentials?.password) {
                     throw new Error("Email and password are required");
                 }
 
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
                 try {
                     // Check if the user exists in the db or not
                     const userExists = await UserModel.findOne({
-                        email: credentials.email
+                        email: credentials.identity
                     });
                     if (!userExists) {
                         throw new Error("User does not exists");
