@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     BackendSignupSchemaType,
@@ -6,14 +6,14 @@ import {
     LoginSchemaType
 } from "@/schemas/auth";
 import toast from "react-hot-toast";
-import { sendotp, signup, verifyotp } from "@/services";
+import { checkuniqueusername, sendotp, signup, verifyotp } from "@/services";
 import { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
 
 // Custom signup hook
 export const useSignup = () => {
     const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleSignup = async (
         data: BackendSignupSchemaType,
@@ -65,7 +65,7 @@ export const useSignup = () => {
 // Custom verify otp hook
 export const useVerifyOtp = () => {
     const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleVerifyOTP = async (
         data: BackendVerifyOtpSchemaType,
@@ -90,7 +90,6 @@ export const useVerifyOtp = () => {
             }
         } catch (err) {
             if (err instanceof AxiosError) {
-                console.log(err.response?.data);
                 toast.error(err.response?.data?.message || "Signup failed");
             }
         } finally {
@@ -103,9 +102,10 @@ export const useVerifyOtp = () => {
     return { handleVerifyOTP, isSubmitting };
 };
 
+// Custom login hook
 export const useLogin = () => {
     const router = useRouter();
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleLogin = async (data: LoginSchemaType, reset: () => void) => {
         const toastId = toast.loading("Loading...");
@@ -140,4 +140,54 @@ export const useLogin = () => {
     };
 
     return { handleLogin, isSubmitting };
+};
+
+// Custom unique username hook
+export const useUniqueUsername = () => {
+    const [usernameMessage, setUsernameMessage] = useState<string>("");
+    const [isUsernameValid, setIsUsernameValid] = useState<boolean | null>(
+        null
+    );
+    const [isCheckingUsername, setIsCheckingUsername] =
+        useState<boolean>(false);
+
+    const handleCheckUniqueUsername = useCallback(async (username: string) => {
+        // If the username length is less than 6
+        if (username.length < 6) {
+            setUsernameMessage("");
+            setIsCheckingUsername(false);
+            setIsUsernameValid(null);
+            return;
+        }
+
+        setIsCheckingUsername(true);
+        setIsUsernameValid(null);
+        setUsernameMessage("");
+
+        try {
+            const uniqueUsernameResponse = await checkuniqueusername(username);
+            if (uniqueUsernameResponse.data.success) {
+                setUsernameMessage(uniqueUsernameResponse.data.message);
+                setIsUsernameValid(true);
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                setUsernameMessage(
+                    err.response?.data.message || "Failed to check username"
+                );
+                setIsUsernameValid(false);
+            }
+        } finally {
+            setIsCheckingUsername(false);
+        }
+    }, []);
+
+    return {
+        handleCheckUniqueUsername,
+        usernameMessage,
+        setUsernameMessage,
+        isUsernameValid,
+        setIsUsernameValid,
+        isCheckingUsername
+    };
 };

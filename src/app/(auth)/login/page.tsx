@@ -21,11 +21,8 @@ import { useState } from "react";
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
-
-    // Login logic
     const { handleLogin, isSubmitting } = useLogin();
 
-    // Login form implementation
     const form = useForm<LoginSchemaType>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -34,6 +31,7 @@ const LoginPage = () => {
         },
         mode: "onChange"
     });
+
     const {
         control,
         formState: { errors, isValid },
@@ -41,7 +39,6 @@ const LoginPage = () => {
         reset
     } = form;
 
-    // Login form submission
     const onLogin = async (data: LoginSchemaType) => {
         await handleLogin(data, reset);
     };
@@ -63,7 +60,7 @@ const LoginPage = () => {
                 <Form {...form}>
                     <form
                         onSubmit={handleSubmit(onLogin)}
-                        className="space-y-5"
+                        className="space-y-6"
                     >
                         <FormField
                             control={control}

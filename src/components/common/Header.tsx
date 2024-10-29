@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Mail } from "lucide-react";
-import { navLinks } from "@/utils/constants";
-import { Button } from "@/components/ui/button";
 import { signOut, useSession } from "next-auth/react";
+import { Mail } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { navLinks } from "@/utils/constants";
 
 const Header = () => {
     const [isScrolled, setIsScrolled] = useState(false);
-    const { data: session } = useSession();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -18,6 +17,8 @@ const Header = () => {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const { data: session } = useSession();
 
     return (
         <header

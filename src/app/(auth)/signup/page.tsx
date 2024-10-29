@@ -14,19 +14,29 @@ import {
 import { Input } from "@/components/ui/input";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
-import { useSignup } from "@/hooks/auth";
+import { useSignup, useUniqueUsername } from "@/hooks/auth";
 import { FrontendSignupSchema, FrontendSignupSchemaType } from "@/schemas/auth";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { EyeIcon, EyeOffIcon, LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import { useDebounceCallback } from "usehooks-ts";
 
 const SignupPage = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] =
+        useState<boolean>(false);
 
-    // Signup logic
     const { handleSignup, isSubmitting } = useSignup();
+    const {
+        handleCheckUniqueUsername,
+        usernameMessage,
+        setUsernameMessage,
+        isCheckingUsername,
+        isUsernameValid,
+        setIsUsernameValid
+    } = useUniqueUsername();
 
-    // Signup form implementation
+    const debounced = useDebounceCallback(handleCheckUniqueUsername, 500);
+
     const form = useForm<FrontendSignupSchemaType>({
         resolver: zodResolver(FrontendSignupSchema),
         defaultValues: {
@@ -44,9 +54,10 @@ const SignupPage = () => {
         reset
     } = form;
 
-    // Signup form submission
     const onSignup = async (data: FrontendSignupSchemaType) => {
         await handleSignup(data, reset);
+        setUsernameMessage("");
+        setIsUsernameValid(null);
     };
 
     return (
@@ -73,7 +84,18 @@ const SignupPage = () => {
                             name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel
+                                        className={cn({
+                                            "text-green-500":
+                                                !isCheckingUsername &&
+                                                isUsernameValid === true,
+                                            "text-red-500":
+                                                !isCheckingUsername &&
+                                                isUsernameValid === false
+                                        })}
+                                    >
+                                        Username
+                                    </FormLabel>
                                     <div className="relative">
                                         <FormControl>
                                             <Input
@@ -81,25 +103,59 @@ const SignupPage = () => {
                                                 placeholder="Enter your username"
                                                 autoComplete="on"
                                                 {...field}
+                                                onChange={async (e) => {
+                                                    field.onChange(e);
+                                                    const username =
+                                                        e.target.value.trim();
+                                                    debounced(username);
+                                                }}
                                                 className={cn(
                                                     "bg-white/5 border-color-2/20 text-white h-12",
-                                                    errors.username &&
-                                                        "border-red-500 focus-visible:ring-red-500"
+                                                    {
+                                                        "border-green-500 focus-within:ring-green-500":
+                                                            !isCheckingUsername &&
+                                                            usernameMessage.includes(
+                                                                "unique"
+                                                            ),
+                                                        "border-red-500 focus-visible:ring-red-500":
+                                                            (!isCheckingUsername &&
+                                                                usernameMessage.includes(
+                                                                    "taken"
+                                                                )) ||
+                                                            errors.username
+                                                    }
                                                 )}
                                             />
                                         </FormControl>
 
-                                        {errors.username && (
+                                        {isCheckingUsername && (
                                             <div className="absolute top-1/2 -translate-y-1/2 right-4">
-                                                <ToolTipMessage
+                                                <LoaderCircle
                                                     size={20}
-                                                    message={
-                                                        errors.username
-                                                            ?.message as string
-                                                    }
+                                                    className="animate-spin"
                                                 />
                                             </div>
                                         )}
+
+                                        {!isCheckingUsername &&
+                                            (usernameMessage ||
+                                                errors.username?.message) && (
+                                                <div className="absolute top-1/2 -translate-y-1/2 right-4">
+                                                    <ToolTipMessage
+                                                        size={20}
+                                                        message={
+                                                            usernameMessage ||
+                                                            (errors.username
+                                                                ?.message as string)
+                                                        }
+                                                        success={
+                                                            isUsernameValid
+                                                                ? true
+                                                                : false
+                                                        }
+                                                    />
+                                                </div>
+                                            )}
                                     </div>
                                 </FormItem>
                             )}
@@ -249,7 +305,11 @@ const SignupPage = () => {
                             )}
                         />
                         <SubmitButton
-                            isValid={isValid}
+                            isValid={
+                                isValid &&
+                                !isCheckingUsername &&
+                                isUsernameValid === true
+                            }
                             isSubmitting={isSubmitting}
                             text="Sign up"
                         />

@@ -6,8 +6,8 @@ import { Types } from "mongoose";
 const usernameSchema = z
     .string()
     .trim()
-    .min(5, "Username must be at least 5 characters")
-    .max(8, "Username must not exceed 8 characters")
+    .min(6, "Username must be at least 6 characters")
+    .max(12, "Username must not exceed 12 characters")
     .regex(
         /^[a-z0-9]+$/,
         "Username can only contain lowercase letters and numbers"
