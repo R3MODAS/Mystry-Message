@@ -12,10 +12,6 @@ import {
 } from "@/components/ui/form";
 import SubmitButton from "@/components/common/SubmitButton";
 import {
-    FrontendVerifyOtpSchema,
-    FrontendVerifyOtpSchemaType
-} from "@/schemas/auth";
-import {
     InputOTP,
     InputOTPGroup,
     InputOTPSlot
@@ -24,12 +20,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useVerifyOtp } from "@/hooks/auth";
+import { VerifyOtpSchema, VerifyOtpSchemaType } from "@/schemas/frontend/auth";
 
 const VerifyOtpPage = () => {
     const { handleVerifyOTP, isSubmitting } = useVerifyOtp();
 
-    const form = useForm<FrontendVerifyOtpSchemaType>({
-        resolver: zodResolver(FrontendVerifyOtpSchema),
+    const form = useForm<VerifyOtpSchemaType>({
+        resolver: zodResolver(VerifyOtpSchema),
         defaultValues: {
             otp: ""
         },
@@ -43,12 +40,11 @@ const VerifyOtpPage = () => {
         reset
     } = form;
 
-    const onVerifyOtp = async (data: FrontendVerifyOtpSchemaType) => {
+    const onVerifyOtp = async (data: VerifyOtpSchemaType) => {
         const verifyData = {
-            otp: data.otp,
-            userid: localStorage.getItem("userid")!
+            userid: localStorage.getItem("userid")!,
+            otp: data.otp
         };
-
         await handleVerifyOTP(verifyData, reset);
     };
 

@@ -7,8 +7,6 @@ export interface User extends Document {
     password: string;
     isVerified: boolean;
     isAcceptingMessages: boolean;
-    verifyOtp: string;
-    verifyOtpExpiry: Date;
     messages: Message[];
     createdAt: Date;
     updatedAt: Date;
@@ -16,19 +14,9 @@ export interface User extends Document {
 
 const userSchema: Schema<User> = new Schema(
     {
-        username: {
-            type: String,
-            trim: true,
-            lowercase: true
-        },
-        email: {
-            type: String,
-            trim: true
-        },
-        password: {
-            type: String,
-            trim: true
-        },
+        username: String,
+        email: String,
+        password: String,
         isVerified: {
             type: Boolean,
             default: false
@@ -37,13 +25,7 @@ const userSchema: Schema<User> = new Schema(
             type: Boolean,
             default: true
         },
-        messages: [messageSchema],
-        verifyOtp: {
-            type: String
-        },
-        verifyOtpExpiry: {
-            type: Date
-        }
+        messages: [messageSchema]
     },
     { timestamps: true }
 );

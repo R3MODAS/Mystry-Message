@@ -1,19 +1,20 @@
+import { UserModel } from "@/models/user";
+import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/backend/auth";
+import { EXPIRY_TIME } from "@/utils/constants";
+import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { NextRequest, NextResponse } from "next/server";
 import { randomInt } from "crypto";
-import { UserModel } from "@/models/user";
-import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { connectMongoDB } from "@/utils/mongodb";
-import { EXPIRY_TIME } from "@/utils/constants";
 import { sendMail } from "@/utils/sendMail";
-import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/auth";
+import { connectRedis, redisClient } from "@/lib/redis";
+import { connectMongoDB } from "@/lib/mongodb";
 
 export const GET = AsyncHandler(async (req: NextRequest) => {
-    // Connection to mongodb
+    // Connection to mongodb and redis
     await connectMongoDB();
+    await connectRedis();
 
     // Get data from request query
     const { searchParams } = new URL(req.nextUrl);
-
     const requestQueryData = {
         userid: searchParams.get("userid")
     } as SendOtpSchemaType;
@@ -33,28 +34,35 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
     }
 
     // Generate the verify otp and otp expiry
-    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0");
-    const verifyOtpExpiry = new Date(Date.now() + EXPIRY_TIME * 1000);
+    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0"),
+        verifyOtpExpiry = new Date(Date.now() + EXPIRY_TIME * 1000);
 
-    // Send the verification email to the user
+    // Send the otp to the user via email
     const emailResponse = await sendMail({
         email: userExists.email,
         username: userExists.username,
         otp: verifyOtp
     });
+
+    // Check if the email was sent to the user or not
     if (!emailResponse.success) {
         throw new ErrorHandler(emailResponse.message, 400);
     }
 
-    // Store the verify otp and otp expiry in db
-    userExists.verifyOtp = verifyOtp;
-    userExists.verifyOtpExpiry = verifyOtpExpiry;
-    await userExists.save({ validateBeforeSave: false });
+    // Store the verify otp and otp expiry in redis
+    await redisClient.set(`verifyOtp:${userExists._id}`, verifyOtp, {
+        EX: EXPIRY_TIME
+    });
+    await redisClient.set(
+        `verifyOtpExpiry:${userExists._id}`,
+        verifyOtpExpiry.toISOString(),
+        { EX: EXPIRY_TIME }
+    );
 
     // Return the response
     return NextResponse.json(
         {
-            success: true,
+            success: emailResponse.success,
             message: emailResponse.message
         },
         { status: 200 }

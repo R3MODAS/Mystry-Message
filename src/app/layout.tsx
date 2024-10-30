@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/context/AuthProvider";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-import { Toaster } from "react-hot-toast";
 import "@/styles/index.css";
 
 const inter = Inter({

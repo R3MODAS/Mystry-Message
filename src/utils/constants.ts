@@ -1,7 +1,7 @@
 import { Lock, UserPlus, Send } from "lucide-react";
 
 // Backend data
-export const DB_NAME = "mystry-message",
+export const DB_NAME = `mystry-message`,
     EXPIRY_TIME = 600;
 
 // Frontend data

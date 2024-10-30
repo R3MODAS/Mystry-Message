@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 
-const AnonymousMessageCarouselSection = () => {
+const AnonymousMessageSection = () => {
     return (
         <section className="px-4 py-16 md:py-32 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-color-1 to-[#0a1836]"></div>
@@ -56,4 +56,4 @@ const AnonymousMessageCarouselSection = () => {
     );
 };
 
-export default AnonymousMessageCarouselSection;
+export default AnonymousMessageSection;

@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
 import { HandlerFunction } from "@/types/types";
+import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+// Error handler
 class ErrorHandler extends Error {
     constructor(
         public message: string,
-        public statusCode: number = 500
+        public statusCode: number
     ) {
         super(message);
         this.statusCode = statusCode;
     }
 }
 
+// Async handler
 const AsyncHandler =
     (fn: HandlerFunction) => (req: NextRequest, params?: any) => {
         return Promise.resolve(fn(req, params)).catch((err) =>
@@ -21,6 +21,7 @@ const AsyncHandler =
         );
     };
 
+// Custom handle error
 const handleError = (err: any) => {
     let statusCode = err.statusCode || 500;
     let message = err.message || "Internal Server Error Occurred";

@@ -1,19 +1,25 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { compare } from "bcrypt";
+import { connectMongoDB } from "@/lib/mongodb";
+import { NEXTAUTH_SECRET } from "@/config";
 import { UserModel } from "@/models/user";
-import { connectMongoDB } from "@/utils/mongodb";
+import bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
-            id: "credentials",
             name: "Credentials",
+            id: "credentials",
             credentials: {
-                identity: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
+                identity: {
+                    type: "email",
+                    placeholder: "Enter your Email Address"
+                },
+                password: {
+                    type: "password",
+                    placeholder: "Enter your Password"
+                }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async authorize(credentials): Promise<any> {
                 // Validation of data
                 if (!credentials?.identity || !credentials?.password) {
@@ -23,40 +29,34 @@ export const authOptions: NextAuthOptions = {
                 // Connection to mongodb
                 await connectMongoDB();
 
-                try {
-                    // Check if the user exists in the db or not
-                    const userExists = await UserModel.findOne({
-                        email: credentials.identity
-                    });
-                    if (!userExists) {
-                        throw new Error("User does not exists");
-                    }
-
-                    // Check if the user is verified or not
-                    if (!userExists.isVerified) {
-                        throw new Error("User is not verified");
-                    }
-
-                    // Validation of password
-                    const isValidPassword = await compare(
-                        credentials.password,
-                        userExists.password
-                    );
-                    if (!isValidPassword) {
-                        throw new Error("Invalid Credentials");
-                    }
-
-                    // Remove the password and __v
-                    userExists.__v = undefined!;
-                    userExists.password = undefined!;
-
-                    // Return the user
-                    return userExists;
-                } catch (err) {
-                    if (err instanceof Error) {
-                        throw new Error(err.message);
-                    }
+                // Check if the user exists in the db or not
+                const userExists = await UserModel.findOne({
+                    email: credentials?.identity
+                });
+                if (!userExists) {
+                    throw new Error("User does not exists");
                 }
+
+                // Check if the user is verified or not
+                if (!userExists.isVerified) {
+                    throw new Error("User is not verified");
+                }
+
+                // Validation of password
+                const isValidPassword = await bcrypt.compare(
+                    credentials?.password,
+                    userExists.password
+                );
+                if (!isValidPassword) {
+                    throw new Error("Invalid credentials");
+                }
+
+                // Remove the password
+                userExists.password = undefined!;
+                userExists.__v = undefined!;
+
+                // Return the user
+                return userExists;
             }
         })
     ],
@@ -69,7 +69,6 @@ export const authOptions: NextAuthOptions = {
                 token.isVerified = user.isVerified;
                 token.isAcceptingMessages = user.isAcceptingMessages;
             }
-
             return token;
         },
         async session({ session, token }) {
@@ -80,7 +79,6 @@ export const authOptions: NextAuthOptions = {
                 session.user.isVerified = token.isVerified;
                 session.user.isAcceptingMessages = token.isAcceptingMessages;
             }
-
             return session;
         }
     },
@@ -90,5 +88,5 @@ export const authOptions: NextAuthOptions = {
     session: {
         strategy: "jwt"
     },
-    secret: process.env.NEXTAUTH_SECRET
+    secret: NEXTAUTH_SECRET
 };

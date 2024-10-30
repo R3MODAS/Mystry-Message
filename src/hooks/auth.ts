@@ -1,24 +1,18 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-    BackendSignupSchemaType,
-    BackendVerifyOtpSchemaType,
-    LoginSchemaType
-} from "@/schemas/auth";
-import toast from "react-hot-toast";
-import { checkuniqueusername, sendotp, signup, verifyotp } from "@/services";
-import { AxiosError } from "axios";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { SignupSchemaType, VerifyOtpSchemaType } from "@/schemas/backend/auth";
+import { checkuniqueusername, sendotp, signup, verifyotp } from "@/services";
+import { LoginSchemaType } from "@/schemas/frontend/auth";
 
 // Custom signup hook
 export const useSignup = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-    const handleSignup = async (
-        data: BackendSignupSchemaType,
-        reset: () => void
-    ) => {
+    const handleSignup = async (data: SignupSchemaType, reset: () => void) => {
         const toastId = toast.loading("Loading...");
         setIsSubmitting(true);
         const { username, email, password } = data;
@@ -68,7 +62,7 @@ export const useVerifyOtp = () => {
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleVerifyOTP = async (
-        data: BackendVerifyOtpSchemaType,
+        data: VerifyOtpSchemaType,
         reset: () => void
     ) => {
         const toastId = toast.loading("Loading...");

@@ -1,11 +1,8 @@
-import {
-    BackendSignupSchemaType,
-    BackendVerifyOtpSchemaType
-} from "@/schemas/auth";
+import { SignupSchemaType, VerifyOtpSchemaType } from "@/schemas/backend/auth";
 import { ApiResponse, IUser } from "@/types/types";
 import axios from "axios";
 
-const signup = (data: BackendSignupSchemaType) =>
+const signup = (data: SignupSchemaType) =>
     axios.post<ApiResponse<IUser>>(`/api/signup`, data);
 
 const sendotp = (userid: string) =>
@@ -13,12 +10,12 @@ const sendotp = (userid: string) =>
         params: { userid }
     });
 
-const verifyotp = (data: BackendVerifyOtpSchemaType) =>
+const verifyotp = (data: VerifyOtpSchemaType) =>
     axios.put<ApiResponse>(`/api/verify-otp`, null, {
         params: data
     });
 
 const checkuniqueusername = (username: string) =>
-    axios.get<ApiResponse>(`/api/check-unique-username?username=${username}`);
+    axios.get<ApiResponse>(`/api/unique-username?username=${username}`);
 
-export { signup, sendotp, verifyotp, checkuniqueusername };
+export { signup, checkuniqueusername, sendotp, verifyotp };

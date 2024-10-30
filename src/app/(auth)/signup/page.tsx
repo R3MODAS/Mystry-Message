@@ -15,10 +15,10 @@ import { Input } from "@/components/ui/input";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
 import { useSignup, useUniqueUsername } from "@/hooks/auth";
-import { FrontendSignupSchema, FrontendSignupSchemaType } from "@/schemas/auth";
 import { EyeIcon, EyeOffIcon, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
+import { SignupSchema, SignupSchemaType } from "@/schemas/frontend/auth";
 
 const SignupPage = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -37,8 +37,8 @@ const SignupPage = () => {
 
     const debounced = useDebounceCallback(handleCheckUniqueUsername, 500);
 
-    const form = useForm<FrontendSignupSchemaType>({
-        resolver: zodResolver(FrontendSignupSchema),
+    const form = useForm<SignupSchemaType>({
+        resolver: zodResolver(SignupSchema),
         defaultValues: {
             username: "",
             email: "",
@@ -54,7 +54,7 @@ const SignupPage = () => {
         reset
     } = form;
 
-    const onSignup = async (data: FrontendSignupSchemaType) => {
+    const onSignup = async (data: SignupSchemaType) => {
         await handleSignup(data, reset);
         setUsernameMessage("");
         setIsUsernameValid(null);

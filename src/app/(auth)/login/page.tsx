@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
 import { useLogin } from "@/hooks/auth";
-import { LoginSchema, LoginSchemaType } from "@/schemas/auth";
+import { LoginSchema, LoginSchemaType } from "@/schemas/frontend/auth";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -31,7 +31,6 @@ const LoginPage = () => {
         },
         mode: "onChange"
     });
-
     const {
         control,
         formState: { errors, isValid },

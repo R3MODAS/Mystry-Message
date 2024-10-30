@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { connectMongoDB } from "@/lib/mongodb";
 import { UserModel } from "@/models/user";
-import { UniqueUsernameSchema, UniqueUsernameSchemaType } from "@/schemas/user";
+import {
+    UniqueUsernameSchema,
+    UniqueUsernameSchemaType
+} from "@/schemas/backend/auth";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { connectMongoDB } from "@/utils/mongodb";
+import { NextRequest, NextResponse } from "next/server";
 
 export const GET = AsyncHandler(async (req: NextRequest) => {
     // Connection to mongodb
@@ -17,9 +20,12 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
     // Validation of data
     const { username } = UniqueUsernameSchema.parse(requestQueryData);
 
-    // Check if the user exists in the db or not
-    const userExists = await UserModel.findOne({ username, isVerified: true });
-    if (userExists) {
+    // Check if the user with username is verified or not
+    const existingUserVerifiedByUsername = await UserModel.findOne({
+        username,
+        isVerified: true
+    });
+    if (existingUserVerifiedByUsername) {
         throw new ErrorHandler("Username is already taken", 409);
     }
 

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export const GET = () => {
+    // Return the response
     return NextResponse.json(
         {
             success: true,
-            message: "Api Endpoints are working properly !!!"
+            message: "Api endpoints are working properly :)"
         },
         { status: 200 }
     );
-}
+};

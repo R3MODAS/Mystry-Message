@@ -33,6 +33,7 @@ export const sendMail = async ({
             "Something went wrong while sending verification email",
             err
         );
+
         return {
             success: false,
             message: "Something went wrong while sending verification email"

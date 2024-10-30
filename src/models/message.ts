@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document, Model } from "mongoose";
 
 export interface Message extends Document {
     content: string;
@@ -8,10 +8,7 @@ export interface Message extends Document {
 
 export const messageSchema: Schema<Message> = new Schema(
     {
-        content: {
-            type: String,
-            trim: true
-        }
+        content: String
     },
     { timestamps: true }
 );
