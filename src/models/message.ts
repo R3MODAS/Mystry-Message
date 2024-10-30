@@ -1,4 +1,4 @@
-import { Schema, Document, Model } from "mongoose";
+import { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
     content: string;

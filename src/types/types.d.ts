@@ -1,6 +1,7 @@
 import { Message } from "@/models/message";
 import { NextRequest, NextResponse } from "next/server";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type HandlerFunction = (
     req: NextRequest,
     params?: any

@@ -20,6 +20,7 @@ export const authOptions: NextAuthOptions = {
                     placeholder: "Enter your Password"
                 }
             },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async authorize(credentials): Promise<any> {
                 // Validation of data
                 if (!credentials?.identity || !credentials?.password) {
@@ -29,34 +30,40 @@ export const authOptions: NextAuthOptions = {
                 // Connection to mongodb
                 await connectMongoDB();
 
-                // Check if the user exists in the db or not
-                const userExists = await UserModel.findOne({
-                    email: credentials?.identity
-                });
-                if (!userExists) {
-                    throw new Error("User does not exists");
+                try {
+                    // Check if the user exists in the db or not
+                    const userExists = await UserModel.findOne({
+                        email: credentials.identity
+                    });
+                    if (!userExists) {
+                        throw new Error("User does not exists");
+                    }
+
+                    // Check if the user is verified or not
+                    if (!userExists.isVerified) {
+                        throw new Error("User is not verified");
+                    }
+
+                    // Validation of password
+                    const isValidPassword = await bcrypt.compare(
+                        credentials.password,
+                        userExists.password
+                    );
+                    if (!isValidPassword) {
+                        throw new Error("Invalid Credentials");
+                    }
+
+                    // Remove the password and __v
+                    userExists.__v = undefined!;
+                    userExists.password = undefined!;
+
+                    // Return the user
+                    return userExists;
+                } catch (err) {
+                    if (err instanceof Error) {
+                        throw new Error(err.message);
+                    }
                 }
-
-                // Check if the user is verified or not
-                if (!userExists.isVerified) {
-                    throw new Error("User is not verified");
-                }
-
-                // Validation of password
-                const isValidPassword = await bcrypt.compare(
-                    credentials?.password,
-                    userExists.password
-                );
-                if (!isValidPassword) {
-                    throw new Error("Invalid credentials");
-                }
-
-                // Remove the password
-                userExists.password = undefined!;
-                userExists.__v = undefined!;
-
-                // Return the user
-                return userExists;
             }
         })
     ],

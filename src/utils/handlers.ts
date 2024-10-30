@@ -2,6 +2,8 @@ import { HandlerFunction } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // Error handler
 class ErrorHandler extends Error {
     constructor(
