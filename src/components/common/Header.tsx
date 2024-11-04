@@ -20,6 +20,8 @@ const Header = () => {
 
     const { data: session } = useSession();
 
+    console.log(session);
+
     return (
         <header
             className={`fixed top-0 left-0 right-0 w-full py-1 z-50 text-white transition-all duration-300 ${isScrolled ? "bg-color-1/50 backdrop-blur-md" : ""}`}
@@ -44,7 +46,7 @@ const Header = () => {
                             </li>
                         ))}
                         <li>
-                            {session ? (
+                            {session?.user ? (
                                 <Button
                                     onClick={() => signOut()}
                                     className="bg-transparent px-7 py-5 text-base font-normal text-white border border-color-3 hover:bg-gradient-to-r from-color-2 to-color-3 hover:text-white rounded-lg"

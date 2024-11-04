@@ -40,7 +40,7 @@ const VerifyOtpPage = () => {
         reset
     } = form;
 
-    const onVerifyOtp = async (data: VerifyOtpSchemaType) => {
+    const onSubmit = async (data: VerifyOtpSchemaType) => {
         const verifyData = {
             userid: localStorage.getItem("userid")!,
             otp: data.otp
@@ -64,7 +64,7 @@ const VerifyOtpPage = () => {
                 {/* Verify otp form */}
                 <Form {...form}>
                     <form
-                        onSubmit={handleSubmit(onVerifyOtp)}
+                        onSubmit={handleSubmit(onSubmit)}
                         className="space-y-6"
                     >
                         <FormField

@@ -54,7 +54,7 @@ const SignupPage = () => {
         reset
     } = form;
 
-    const onSignup = async (data: SignupSchemaType) => {
+    const onSubmit = async (data: SignupSchemaType) => {
         await handleSignup(data, reset);
         setUsernameMessage("");
         setIsUsernameValid(null);
@@ -76,8 +76,8 @@ const SignupPage = () => {
                 {/* Signup form */}
                 <Form {...form}>
                     <form
-                        onSubmit={handleSubmit(onSignup)}
-                        className="space-y-5"
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
                     >
                         <FormField
                             control={control}

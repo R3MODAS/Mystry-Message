@@ -26,7 +26,7 @@ export const sendMail = async ({
 
         return {
             success: true,
-            message: "Verification code has been sent successfully"
+            message: "Otp has been sent successfully"
         };
     } catch (err) {
         console.error(

@@ -38,7 +38,7 @@ const LoginPage = () => {
         reset
     } = form;
 
-    const onLogin = async (data: LoginSchemaType) => {
+    const onSubmit = async (data: LoginSchemaType) => {
         await handleLogin(data, reset);
     };
 
@@ -58,7 +58,7 @@ const LoginPage = () => {
                 {/* Signup form */}
                 <Form {...form}>
                     <form
-                        onSubmit={handleSubmit(onLogin)}
+                        onSubmit={handleSubmit(onSubmit)}
                         className="space-y-6"
                     >
                         <FormField

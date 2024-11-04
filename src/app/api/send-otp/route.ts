@@ -34,8 +34,8 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
     }
 
     // Generate the verify otp and otp expiry
-    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0"),
-        verifyOtpExpiry = new Date(Date.now() + EXPIRY_TIME * 1000);
+    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0");
+    const verifyOtpExpiry = new Date(Date.now() + EXPIRY_TIME * 1000);
 
     // Send the otp to the user via email
     const emailResponse = await sendMail({
@@ -44,27 +44,27 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
         otp: verifyOtp
     });
 
-    // Check if the email was sent to the user or not
+    // Check if the mail is sent successfully or not
     if (!emailResponse.success) {
         throw new ErrorHandler(emailResponse.message, 400);
+    } else {
+        // Store the verify otp and otp expiry in redis
+        await redisClient.set(`verifyOtp:${userid}`, verifyOtp, {
+            EX: EXPIRY_TIME
+        });
+        await redisClient.set(
+            `verifyOtpExpiry:${userid}`,
+            verifyOtpExpiry.toISOString(),
+            { EX: EXPIRY_TIME }
+        );
+
+        // Return the response
+        return NextResponse.json(
+            {
+                success: emailResponse.success,
+                message: emailResponse.message
+            },
+            { status: 200 }
+        );
     }
-
-    // Store the verify otp and otp expiry in redis
-    await redisClient.set(`verifyOtp:${userExists._id}`, verifyOtp, {
-        EX: EXPIRY_TIME
-    });
-    await redisClient.set(
-        `verifyOtpExpiry:${userExists._id}`,
-        verifyOtpExpiry.toISOString(),
-        { EX: EXPIRY_TIME }
-    );
-
-    // Return the response
-    return NextResponse.json(
-        {
-            success: emailResponse.success,
-            message: emailResponse.message
-        },
-        { status: 200 }
-    );
 });

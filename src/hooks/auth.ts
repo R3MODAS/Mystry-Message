@@ -2,10 +2,10 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { SignupSchemaType, VerifyOtpSchemaType } from "@/schemas/backend/auth";
-import { checkuniqueusername, sendotp, signup, verifyotp } from "@/services";
 import { LoginSchemaType } from "@/schemas/frontend/auth";
+import { ApiResponse, IUser } from "@/types/types";
 
 // Custom signup hook
 export const useSignup = () => {
@@ -15,31 +15,28 @@ export const useSignup = () => {
     const handleSignup = async (data: SignupSchemaType, reset: () => void) => {
         const toastId = toast.loading("Loading...");
         setIsSubmitting(true);
-        const { username, email, password } = data;
 
         try {
-            // Check if the signup response is successful or not
-            const signupResponse = await signup({ username, email, password });
-
+            const signupResponse = await axios.post<ApiResponse<IUser>>(
+                `/api/signup`,
+                data
+            );
             if (!signupResponse.data.success) {
                 throw new Error(signupResponse.data.message);
             } else {
-                // Check if the sendotp response is successful or not
-                const sendotpResponse = await sendotp(
-                    signupResponse.data.data!._id
+                const sendotpResponse = await axios.get<ApiResponse>(
+                    `/api/send-otp`,
+                    {
+                        params: { userid: signupResponse.data.data!._id }
+                    }
                 );
 
                 if (!sendotpResponse.data.success) {
                     throw new Error(sendotpResponse.data.message);
                 }
 
-                // Store the userid
                 localStorage.setItem("userid", signupResponse.data.data!._id);
-
-                // Show the toast message
                 toast.success(signupResponse.data.message);
-
-                // Move to verify page
                 router.replace("/verify");
             }
         } catch (err) {
@@ -69,17 +66,17 @@ export const useVerifyOtp = () => {
         setIsSubmitting(true);
 
         try {
-            // Check if the verify otp response is successful or not
-            const verifyOtpResponse = await verifyotp(data);
+            const verifyOtpResponse = await axios.put<ApiResponse>(
+                `/api/verify-otp`,
+                null,
+                {
+                    params: data
+                }
+            );
 
             if (verifyOtpResponse.data.success) {
-                // Show the toast message
                 toast.success(verifyOtpResponse.data.message);
-
-                // Remove the userid
                 localStorage.removeItem("userid");
-
-                // Move to login page
                 router.replace("/login");
             }
         } catch (err) {
@@ -107,7 +104,6 @@ export const useLogin = () => {
         const { identity, password } = data;
 
         try {
-            // Login the user
             const result = await signIn("credentials", {
                 redirect: false,
                 identity,
@@ -146,7 +142,6 @@ export const useUniqueUsername = () => {
         useState<boolean>(false);
 
     const handleCheckUniqueUsername = useCallback(async (username: string) => {
-        // If the username length is less than 6
         if (username.length < 6) {
             setUsernameMessage("");
             setIsCheckingUsername(false);
@@ -159,7 +154,9 @@ export const useUniqueUsername = () => {
         setUsernameMessage("");
 
         try {
-            const uniqueUsernameResponse = await checkuniqueusername(username);
+            const uniqueUsernameResponse = await axios.get<ApiResponse>(
+                `/api/unique-username?username=${username}`
+            );
             if (uniqueUsernameResponse.data.success) {
                 setUsernameMessage(uniqueUsernameResponse.data.message);
                 setIsUsernameValid(true);

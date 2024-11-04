@@ -32,10 +32,8 @@ export const PUT = AsyncHandler(async (req: NextRequest) => {
     }
 
     // Validation of verify otp and otp expiry
-    const verifyOtp = await redisClient.get(`verifyOtp:${userExists._id}`);
-    const verifyOtpExpiry = await redisClient.get(
-        `verifyOtpExpiry:${userExists._id}`
-    );
+    const verifyOtp = await redisClient.get(`verifyOtp:${userid}`);
+    const verifyOtpExpiry = await redisClient.get(`verifyOtpExpiry:${userid}`);
     if (
         !verifyOtp ||
         !verifyOtpExpiry ||
