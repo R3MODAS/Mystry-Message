@@ -53,7 +53,7 @@ export const POST = AsyncHandler(async (req) => {
 });
 
 // Get accept messages status
-export const GET = AsyncHandler(async (req) => {
+export const GET = AsyncHandler(async () => {
     // Connect to mongodb
     await connectMongoDB();
 
