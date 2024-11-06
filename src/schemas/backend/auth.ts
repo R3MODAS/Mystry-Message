@@ -7,7 +7,7 @@ import {
     usernameSchema
 } from "@/schemas/common";
 
-// Signup Schema
+// Signup schema
 export const SignupSchema = z.object({
     username: usernameSchema,
     email: emailSchema,
@@ -15,13 +15,13 @@ export const SignupSchema = z.object({
 });
 export type SignupSchemaType = z.infer<typeof SignupSchema>;
 
-// Send OTP schema
+// Send otp schema
 export const SendOtpSchema = z.object({
     userid: useridSchema
 });
 export type SendOtpSchemaType = z.infer<typeof SendOtpSchema>;
 
-// Verify OTP schema
+// Verify otp schema
 export const VerifyOtpSchema = z.object({
     userid: useridSchema,
     otp: otpSchema

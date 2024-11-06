@@ -3,9 +3,9 @@ import { connectRedis, redisClient } from "@/lib/redis";
 import { UserModel } from "@/models/user";
 import { VerifyOtpSchema, VerifyOtpSchemaType } from "@/schemas/backend/auth";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const PUT = AsyncHandler(async (req: NextRequest) => {
+export const PUT = AsyncHandler(async (req) => {
     // Connection to mongodb and redis
     await connectMongoDB();
     await connectRedis();
@@ -28,7 +28,7 @@ export const PUT = AsyncHandler(async (req: NextRequest) => {
 
     // Check if the user is already verified or not
     if (userExists.isVerified) {
-        throw new ErrorHandler("User is already verified", 409);
+        throw new ErrorHandler("Email is already verified", 409);
     }
 
     // Validation of verify otp and otp expiry
@@ -37,23 +37,23 @@ export const PUT = AsyncHandler(async (req: NextRequest) => {
     if (
         !verifyOtp ||
         !verifyOtpExpiry ||
-        verifyOtp !== otp ||
+        otp !== verifyOtp ||
         new Date() > new Date(verifyOtpExpiry)
     ) {
-        throw new ErrorHandler("Invalid Otp or Otp has expired", 403);
+        throw new ErrorHandler("Invalid Otp or Otp has expired", 400);
     }
 
     // Verify the user and remove the verify otp and otp expiry from redis
     userExists.isVerified = true;
     await userExists.save({ validateBeforeSave: false });
-    await redisClient.del(`verifyOtp:${userExists._id}`);
-    await redisClient.del(`verifyOtpExpiry:${userExists._id}`);
+    await redisClient.del(`verifyOtp:${userid}`);
+    await redisClient.del(`verifyOtpExpiry:${userid}`);
 
     // Return the response
     return NextResponse.json(
         {
             success: true,
-            message: "Otp is verified successfully"
+            message: "Otp has been verified successfully"
         },
         { status: 200 }
     );

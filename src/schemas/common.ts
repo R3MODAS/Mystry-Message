@@ -6,6 +6,7 @@ import { Types } from "mongoose";
 const usernameSchema = z
     .string()
     .trim()
+    .toLowerCase()
     .min(6, "Username must be at least 6 characters")
     .max(12, "Username must not exceed 12 characters")
     .regex(
@@ -46,7 +47,7 @@ const useridSchema = z
 const otpSchema = z
     .string()
     .trim()
-    .min(1, "Otp must be at least 1 digits")
+    .min(1, "Otp must be at least 1 digit")
     .max(6, "Otp must not exceed 6 digits")
     .length(6, "Otp must be of 6 digits");
 

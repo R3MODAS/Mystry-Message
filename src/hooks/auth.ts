@@ -18,14 +18,14 @@ export const useSignup = () => {
 
         try {
             const signupResponse = await axios.post<ApiResponse<IUser>>(
-                `/api/signup`,
+                `/api/auth/signup`,
                 data
             );
             if (!signupResponse.data.success) {
                 throw new Error(signupResponse.data.message);
             } else {
                 const sendotpResponse = await axios.get<ApiResponse>(
-                    `/api/send-otp`,
+                    `/api/auth/send-otp`,
                     {
                         params: { userid: signupResponse.data.data!._id }
                     }
@@ -67,7 +67,7 @@ export const useVerifyOtp = () => {
 
         try {
             const verifyOtpResponse = await axios.put<ApiResponse>(
-                `/api/verify-otp`,
+                `/api/auth/verify-otp`,
                 null,
                 {
                     params: data
@@ -155,7 +155,7 @@ export const useUniqueUsername = () => {
 
         try {
             const uniqueUsernameResponse = await axios.get<ApiResponse>(
-                `/api/unique-username?username=${username}`
+                `/api/auth/unique-username?username=${username}`
             );
             if (uniqueUsernameResponse.data.success) {
                 setUsernameMessage(uniqueUsernameResponse.data.message);

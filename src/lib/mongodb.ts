@@ -8,22 +8,26 @@ interface Connection {
 
 const connection: Connection = {};
 
-export const connectMongoDB = async () => {
-    // If the connection to mongodb is already made
+export const connectMongoDB = async (): Promise<void> => {
+    // If the db connection is already made
     if (connection.isConnected) {
         console.log(`Already connected to MongoDB`);
         return;
     }
 
-    // If the connection to mongodb is new
     try {
+        // If the db connection is new
         const db = await mongoose.connect(MONGODB_URL, {
             dbName: DB_NAME
         });
+
+        // Store the connection value
         connection.isConnected = db.connections[0].readyState;
+
         console.log(`MongoDB is connected successfully`);
     } catch (err) {
-        console.error(`Failed to connect to MongoDB: `, err);
+        console.error(`Database connection failed:`, err);
+
         process.exit(1);
     }
 };

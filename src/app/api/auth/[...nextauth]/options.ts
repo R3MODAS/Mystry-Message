@@ -1,66 +1,66 @@
-import { connectMongoDB } from "@/lib/mongodb";
-import { UserModel } from "@/models/user";
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { compare } from "bcrypt";
+import { connectMongoDB } from "@/lib/mongodb";
+import { UserModel } from "@/models/user";
+import { ErrorHandler } from "@/utils/handlers";
 import { NEXTAUTH_SECRET } from "@/config";
-import { LoginSchema } from "@/schemas/frontend/auth";
+import bcrypt from "bcrypt";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const authOptions: NextAuthOptions = {
     providers: [
         Credentials({
             id: "credentials",
-            name: "Login to your Account",
+            name: "Login your Account",
             credentials: {
                 identity: {
-                    label: "Email Address",
                     type: "email",
-                    placeholder: "Email Address"
+                    placeholder: "Enter your Email Address"
                 },
                 password: {
-                    label: "Password",
                     type: "password",
-                    placeholder: "Password"
+                    placeholder: "Enter your Password"
                 }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             async authorize(credentials): Promise<any> {
+                // Get data from credentials
+                const { identity, password } = credentials as {
+                    identity: string;
+                    password: string;
+                };
+
                 // Connection to mongodb
                 await connectMongoDB();
 
                 try {
-                    // Validation of data
-                    const { identity, password } =
-                        LoginSchema.parse(credentials);
-
                     // Check if the user exists in the db or not
                     const userExists = await UserModel.findOne({
                         email: identity
                     });
                     if (!userExists) {
-                        throw new Error("User does not exists");
+                        throw new ErrorHandler("User does not exists", 404);
                     }
 
                     // Check if the user is verified or not
                     if (!userExists.isVerified) {
-                        throw new Error("User is not verified");
+                        throw new ErrorHandler("Please verify your email", 401);
                     }
 
                     // Validation of password
-                    const isValidPassword = await compare(
+                    const isValidPassword = await bcrypt.compare(
                         password,
                         userExists.password
                     );
-                    if (!isValidPassword) {
-                        throw new Error("Invalid Credentials");
+                    if (isValidPassword) {
+                        // Remove the password and __v
+                        userExists.password = undefined!;
+                        userExists.__v = undefined!;
+
+                        // Return the user
+                        return userExists;
+                    } else {
+                        throw new ErrorHandler("Invalid Credentials", 403);
                     }
-
-                    // Remove the password __v
-                    userExists.password = undefined!;
-                    userExists.__v = undefined!;
-
-                    // Return the user
-                    return userExists;
                 } catch (err) {
                     if (err instanceof Error) {
                         throw new Error(err.message);
@@ -74,7 +74,6 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token._id = user._id?.toString();
                 token.username = user.username;
-                token.email = user.email;
                 token.isVerified = user.isVerified;
                 token.isAcceptingMessages = user.isAcceptingMessages;
             }
@@ -84,7 +83,6 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.user._id = token._id;
                 session.user.username = token.username;
-                session.user.email = token.email;
                 session.user.isVerified = token.isVerified;
                 session.user.isAcceptingMessages = token.isAcceptingMessages;
             }

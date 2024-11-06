@@ -1,14 +1,14 @@
+import { connectMongoDB } from "@/lib/mongodb";
+import { connectRedis, redisClient } from "@/lib/redis";
 import { UserModel } from "@/models/user";
 import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/backend/auth";
-import { EXPIRY_TIME } from "@/utils/constants";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { NextRequest, NextResponse } from "next/server";
-import { randomInt } from "crypto";
+import { NextResponse } from "next/server";
+import crypto from "crypto";
+import { EXPIRY_TIME } from "@/utils/constants";
 import { sendMail } from "@/utils/sendMail";
-import { connectRedis, redisClient } from "@/lib/redis";
-import { connectMongoDB } from "@/lib/mongodb";
 
-export const GET = AsyncHandler(async (req: NextRequest) => {
+export const GET = AsyncHandler(async (req) => {
     // Connection to mongodb and redis
     await connectMongoDB();
     await connectRedis();
@@ -30,22 +30,26 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
 
     // Check if the user is already verified or not
     if (userExists.isVerified) {
-        throw new ErrorHandler("User is already verified", 409);
+        throw new ErrorHandler("Email is already verified", 409);
     }
 
     // Generate the verify otp and otp expiry
-    const verifyOtp = randomInt(100000, 999999).toString().padStart(6, "0");
+    const verifyOtp = crypto
+        .randomInt(100000, 999999)
+        .toString()
+        .padStart(6, "0");
     const verifyOtpExpiry = new Date(Date.now() + EXPIRY_TIME * 1000);
 
-    // Send the otp to the user via email
+    // Send the otp to the user via mail
     const emailResponse = await sendMail({
         email: userExists.email,
         username: userExists.username,
         otp: verifyOtp
     });
 
-    // Check if the mail is sent successfully or not
+    // Check if the email is sent successfully or not
     if (!emailResponse.success) {
+        // Return the error response
         throw new ErrorHandler(emailResponse.message, 400);
     } else {
         // Store the verify otp and otp expiry in redis

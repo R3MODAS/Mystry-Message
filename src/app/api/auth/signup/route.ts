@@ -1,21 +1,21 @@
-import { connectMongoDB } from "@/lib/mongodb";
-import { UserModel } from "@/models/user";
-import { SignupSchema, SignupSchemaType } from "@/schemas/backend/auth";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { NextRequest, NextResponse } from "next/server";
+import { connectMongoDB } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
+import { SignupSchema } from "@/schemas/backend/auth";
+import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 
-export const POST = AsyncHandler(async (req: NextRequest) => {
+export const POST = AsyncHandler(async (req) => {
     // Connection to mongodb
     await connectMongoDB();
 
     // Get data from request body
-    const requestBodyData = (await req.json()) as SignupSchemaType;
+    const requestBodyData = await req.json();
 
     // Validation of data
     const { username, email, password } = SignupSchema.parse(requestBodyData);
 
-    // Check if the user with username is verified exists in the db or not
+    // Check if the user with the username is already verified or not
     const existingUserVerifiedByUsername = await UserModel.findOne({
         username,
         isVerified: true
@@ -24,7 +24,7 @@ export const POST = AsyncHandler(async (req: NextRequest) => {
         throw new ErrorHandler("Username is already taken", 409);
     }
 
-    // Check if the user with email already exists in the db or not
+    // Check if the user with the email already exists in the db or not
     const existingUserByEmail = await UserModel.findOne({ email });
     if (existingUserByEmail) {
         throw new ErrorHandler("User already exists, Please Login", 409);

@@ -4,6 +4,14 @@ import { ZodError } from "zod";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+// Async handler
+const AsyncHandler =
+    (fn: HandlerFunction) => (req: NextRequest, params?: any) => {
+        return Promise.resolve(fn(req, params)).catch((err) =>
+            handleError(err)
+        );
+    };
+
 // Error handler
 class ErrorHandler extends Error {
     constructor(
@@ -14,14 +22,6 @@ class ErrorHandler extends Error {
         this.statusCode = statusCode;
     }
 }
-
-// Async handler
-const AsyncHandler =
-    (fn: HandlerFunction) => (req: NextRequest, params?: any) => {
-        return Promise.resolve(fn(req, params)).catch((err) =>
-            handleError(err)
-        );
-    };
 
 // Custom handle error
 const handleError = (err: any) => {
@@ -71,4 +71,4 @@ const handleError = (err: any) => {
     );
 };
 
-export { ErrorHandler, AsyncHandler };
+export { AsyncHandler, ErrorHandler };

@@ -5,13 +5,13 @@ import {
     UniqueUsernameSchemaType
 } from "@/schemas/backend/auth";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export const GET = AsyncHandler(async (req: NextRequest) => {
+export const GET = AsyncHandler(async (req) => {
     // Connection to mongodb
     await connectMongoDB();
 
-    // Get data from request query
+    // Get data from request body
     const { searchParams } = new URL(req.nextUrl);
     const requestQueryData = {
         username: searchParams.get("username")
@@ -20,7 +20,7 @@ export const GET = AsyncHandler(async (req: NextRequest) => {
     // Validation of data
     const { username } = UniqueUsernameSchema.parse(requestQueryData);
 
-    // Check if the user with username is verified or not
+    // Check if the user with the username exists in the db or not
     const existingUserVerifiedByUsername = await UserModel.findOne({
         username,
         isVerified: true
