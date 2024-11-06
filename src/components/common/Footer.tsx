@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { footerLinks } from "@/utils/constants";
 
 const Footer = () => {
     return (
         <footer className="bg-color-1 text-white py-12 mt-auto">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                     <div className="space-y-4">
                         <span className="text-2xl font-bold bg-gradient-to-r from-color-2 to-color-3 text-transparent bg-clip-text">
                             Mystry Message
@@ -56,98 +57,39 @@ const Footer = () => {
                             </a>
                         </div>
                     </div>
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">
-                            Quick Links
-                        </h3>
-                        <ul className="space-y-4">
-                            <li>
-                                <Link
-                                    href="/about"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    About
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/features"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Features
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/pricing"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Pricing
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/blog"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Blog
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">Support</h3>
-                        <ul className="space-y-4">
-                            <li>
-                                <Link
-                                    href="/faq"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    FAQ
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/contact"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Contact
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/privacy"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Privacy Policy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/terms"
-                                    className="text-color-4 hover:text-color-2 transition-colors"
-                                >
-                                    Terms of Service
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">
-                            Newsletter
-                        </h3>
+                    {footerLinks.map((section, index) => (
+                        <div key={index} className="space-y-4">
+                            <h3 className="text-lg font-semibold">
+                                {section.title}
+                            </h3>
+                            <ul className="space-y-4">
+                                {section.links.map((link) => (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className="text-color-4 hover:text-color-2 transition-colors"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                    <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Newsletter</h3>
                         <p className="text-sm text-color-4 mb-4">
                             Stay updated with our latest features and releases.
                         </p>
-                        <form className="flex">
+                        <form className="flex flex-col sm:flex-row gap-4 sm:gap-2">
                             <Input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="bg-white/10 border-color-2/20 text-white placeholder-color-4/50 focus:border-color-2"
+                                className="bg-white/10 border-color-2/20 text-white placeholder-color-4/50 focus:border-color-2 h-11"
                             />
                             <Button
                                 type="submit"
-                                className="ml-2 bg-color-2 hover:bg-color-5 text-white"
+                                className="bg-color-2 hover:bg-color-5 text-white h-11"
                             >
                                 Subscribe
                             </Button>

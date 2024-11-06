@@ -43,7 +43,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-20">
+        <div className="min-h-screen text-white flex flex-col items-center justify-center py-20">
             <div className="w-full max-w-md">
                 {/* Form top */}
                 <div className="text-center mb-8">

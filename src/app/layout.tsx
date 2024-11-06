@@ -24,7 +24,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${inter.className} antialiased flex flex-col min-h-screen`}
+                className={`${inter.className} antialiased flex flex-col min-h-screen bg-color-1`}
             >
                 <AuthProvider>
                     <Header />

@@ -4,7 +4,7 @@ import AnonymousMessageSection from "@/components/home/AnonymousMessage";
 
 const HomePage = () => {
     return (
-        <main className="bg-color-1 pt-20">
+        <main className="pt-20">
             <BannerSection />
             <WhyChooseSection />
             <AnonymousMessageSection />

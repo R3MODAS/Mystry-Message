@@ -44,4 +44,24 @@ export const navLinks = [
                 "Messages are sent and received instantly. No delays in your mysterious conversations.",
             icon: Send
         }
+    ],
+    footerLinks = [
+        {
+            title: "Quick Links",
+            links: [
+                { href: "/about", label: "About" },
+                { href: "/features", label: "Features" },
+                { href: "/pricing", label: "Pricing" },
+                { href: "/blog", label: "Blog" }
+            ]
+        },
+        {
+            title: "Support",
+            links: [
+                { href: "/faq", label: "FAQ" },
+                { href: "/contact", label: "Contact" },
+                { href: "/privacy", label: "Privacy Policy" },
+                { href: "/terms", label: "Terms of Service" }
+            ]
+        }
     ];

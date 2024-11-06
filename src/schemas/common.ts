@@ -2,7 +2,7 @@ import { z } from "zod";
 import { emailValidator } from "@/utils/validators";
 import { Types } from "mongoose";
 
-// ==================== Common schema =====================
+// Common schemas
 const usernameSchema = z
     .string()
     .trim()
@@ -52,3 +52,11 @@ const otpSchema = z
     .length(6, "Otp must be of 6 digits");
 
 export { usernameSchema, emailSchema, passwordSchema, useridSchema, otpSchema };
+
+// Accept message schema
+export const AcceptMessagesSchema = z.object({
+    acceptMessages: z.boolean({
+        message: "Please provide a valid value"
+    })
+});
+export type AcceptMessagesSchemaType = z.infer<typeof AcceptMessagesSchema>;

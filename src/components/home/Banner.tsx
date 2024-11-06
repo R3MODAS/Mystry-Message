@@ -3,9 +3,9 @@ import Image from "next/image";
 
 const BannerSection = () => {
     return (
-        <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center justify-center text-white">
-            <div className="md:w-1/2 mb-12 md:mb-0">
-                <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+        <section className="container mx-auto px-4 py-8 md:py-16 lg:py-24 flex flex-col lg:flex-row items-center justify-center text-white">
+            <div className="lg:w-1/2 mb-12 lg:mb-0">
+                <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
                     Discover the{" "}
                     <span className="bg-gradient-to-r from-color-2 to-color-3 text-transparent bg-clip-text">
                         Secret
@@ -29,13 +29,13 @@ const BannerSection = () => {
                     </Button>
                 </div>
             </div>
-            <div className="md:w-1/2">
+            <div className="lg:w-1/2">
                 <Image
                     src="/assets/message.webp"
                     width={450}
                     height={450}
-                    priority
                     alt="message"
+                    priority
                     className="w-auto h-auto mx-auto"
                 />
             </div>
