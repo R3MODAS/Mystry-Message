@@ -14,11 +14,11 @@ import {
 import { Input } from "@/components/ui/input";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
-import { useSignup, useUniqueUsername } from "@/hooks/auth";
+import { useSignup, useUniqueUsername } from "@/hooks";
 import { EyeIcon, EyeOffIcon, LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
-import { SignupSchema, SignupSchemaType } from "@/schemas/frontend/auth";
+import { SignupSchema, SignupSchemaType } from "@/schemas/frontend";
 
 const SignupPage = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -61,14 +61,14 @@ const SignupPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-20">
+        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-20 px-5">
             <div className="w-full max-w-md">
                 {/* Form top */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold mt-6 mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-bold mt-6 mb-2">
                         Create an account
                     </h1>
-                    <p className="text-color-4">
+                    <p className="text-color-4 text-sm sm:text-base">
                         Start your journey with anonymous messaging
                     </p>
                 </div>

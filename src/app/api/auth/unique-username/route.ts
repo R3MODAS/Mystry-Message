@@ -3,7 +3,7 @@ import { UserModel } from "@/models/user";
 import {
     UniqueUsernameSchema,
     UniqueUsernameSchemaType
-} from "@/schemas/backend/auth";
+} from "@/schemas/backend";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { NextResponse } from "next/server";
 

@@ -88,7 +88,7 @@ const Footer = () => {
                                 className="bg-white/10 border-color-2/20 text-white placeholder-color-4/50 focus:border-color-2 h-11"
                             />
                             <Button
-                                type="submit"
+                                type="button"
                                 className="bg-color-2 hover:bg-color-5 text-white h-11"
                             >
                                 Subscribe
@@ -97,8 +97,7 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="mt-8 pt-8 border-t border-color-4/10 text-center text-sm text-color-4">
-                    © {new Date().getFullYear()} Mystry Message. All rights
-                    reserved.
+                    &copy; 2024 Mystry Message. All rights reserved.
                 </div>
             </div>
         </footer>

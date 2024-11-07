@@ -1,7 +1,7 @@
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { connectMongoDB } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-import { SignupSchema } from "@/schemas/backend/auth";
+import { SignupSchema } from "@/schemas/backend";
 import { UserModel } from "@/models/user";
 import bcrypt from "bcrypt";
 

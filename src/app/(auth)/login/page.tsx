@@ -14,8 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import ToolTipMessage from "@/components/common/ToolTipMessage";
 import SubmitButton from "@/components/common/SubmitButton";
-import { useLogin } from "@/hooks/auth";
-import { LoginSchema, LoginSchemaType } from "@/schemas/frontend/auth";
+import { useLogin } from "@/hooks";
+import { LoginSchema, LoginSchemaType } from "@/schemas/frontend";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 
@@ -43,14 +43,14 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen text-white flex flex-col items-center justify-center py-20">
+        <div className="min-h-screen text-white flex flex-col items-center justify-center py-20 px-5">
             <div className="w-full max-w-md">
                 {/* Form top */}
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold mt-6 mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-bold mt-6 mb-2">
                         Login to your account
                     </h1>
-                    <p className="text-color-4">
+                    <p className="text-color-4 text-sm sm:text-base">
                         Kickstart with anonymous messaging quickly
                     </p>
                 </div>

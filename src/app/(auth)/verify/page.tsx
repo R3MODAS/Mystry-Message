@@ -19,8 +19,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useVerifyOtp } from "@/hooks/auth";
-import { VerifyOtpSchema, VerifyOtpSchemaType } from "@/schemas/frontend/auth";
+import { useVerifyOtp } from "@/hooks";
+import { VerifyOtpSchema, VerifyOtpSchemaType } from "@/schemas/frontend";
 
 const VerifyOtpPage = () => {
     const { handleVerifyOTP, isSubmitting } = useVerifyOtp();
@@ -49,14 +49,14 @@ const VerifyOtpPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-4">
+        <div className="min-h-screen bg-color-1 text-white flex flex-col items-center justify-center py-4 px-5">
             <div className="w-full max-w-md">
                 {/* Form top */}
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold mt-6 mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-bold mt-6 mb-2">
                         Verify Your Email
                     </h1>
-                    <p className="text-color-4">
+                    <p className="text-color-4 text-sm sm:text-base">
                         Enter the 6-digit code sent to your email
                     </p>
                 </div>
@@ -77,55 +77,20 @@ const VerifyOtpPage = () => {
                                     </FormLabel>
                                     <FormControl>
                                         <InputOTP maxLength={6} {...field}>
-                                            <InputOTPGroup className="gap-3 justify-center">
-                                                <InputOTPSlot
-                                                    index={0}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
-                                                <InputOTPSlot
-                                                    index={1}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
-                                                <InputOTPSlot
-                                                    index={2}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
-                                                <InputOTPSlot
-                                                    index={3}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
-                                                <InputOTPSlot
-                                                    index={4}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
-                                                <InputOTPSlot
-                                                    index={5}
-                                                    className={cn(
-                                                        "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
-                                                        errors.otp &&
-                                                            "border-red-500 focus-visible:ring-red-500"
-                                                    )}
-                                                />
+                                            <InputOTPGroup className="gap-3 justify-center w-full">
+                                                {[0, 1, 2, 3, 4, 5].map(
+                                                    (_, index) => (
+                                                        <InputOTPSlot
+                                                            key={index}
+                                                            index={index}
+                                                            className={cn(
+                                                                "bg-white/5 text-base !rounded-lg border border-color-2/20 text-white w-16 h-16",
+                                                                errors.otp &&
+                                                                    "border-red-500 focus-visible:ring-red-500"
+                                                            )}
+                                                        />
+                                                    )
+                                                )}
                                             </InputOTPGroup>
                                         </InputOTP>
                                     </FormControl>

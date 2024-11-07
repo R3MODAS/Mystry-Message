@@ -3,8 +3,8 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
-import { SignupSchemaType, VerifyOtpSchemaType } from "@/schemas/backend/auth";
-import { LoginSchemaType } from "@/schemas/frontend/auth";
+import { SignupSchemaType, VerifyOtpSchemaType } from "@/schemas/backend";
+import { ContactUsSchemaType, LoginSchemaType } from "@/schemas/frontend";
 import { ApiResponse, IUser } from "@/types/types";
 
 // Custom signup hook
@@ -181,4 +181,36 @@ export const useUniqueUsername = () => {
         setIsUsernameValid,
         isCheckingUsername
     };
+};
+
+// Custom contact us hook
+export const useContactUs = () => {
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+    const handleContactUs = async (
+        data: ContactUsSchemaType,
+        reset: () => void
+    ) => {
+        const toastId = toast.loading("Loading...");
+        setIsSubmitting(true);
+        try {
+            const response = await axios.post<ApiResponse>(
+                `/api/contact-us`,
+                data
+            );
+            if (response.data.success) {
+                toast.success(response.data.message);
+            }
+        } catch (err) {
+            if (err instanceof AxiosError) {
+                toast.error(err.response?.data?.message || "Signup failed");
+            }
+        } finally {
+            setIsSubmitting(false);
+            toast.dismiss(toastId);
+            reset();
+        }
+    };
+
+    return { isSubmitting, handleContactUs };
 };

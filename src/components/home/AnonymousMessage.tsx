@@ -12,7 +12,7 @@ import Autoplay from "embla-carousel-autoplay";
 const AnonymousMessageSection = () => {
     return (
         <section className="py-16 lg:py-24 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-color-1 to-[#0a1836]"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-color-1 to-color-7"></div>
             <div className="container mx-auto px-4 lg:px-10 relative z-10">
                 <h2 className="text-3xl lg:text-5xl font-bold mb-12 text-center text-white">
                     Anonymous Messages

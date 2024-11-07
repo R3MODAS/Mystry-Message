@@ -1,7 +1,7 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import { connectRedis, redisClient } from "@/lib/redis";
 import { UserModel } from "@/models/user";
-import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/backend/auth";
+import { SendOtpSchema, SendOtpSchemaType } from "@/schemas/backend";
 import { AsyncHandler, ErrorHandler } from "@/utils/handlers";
 import { NextResponse } from "next/server";
 import crypto from "crypto";

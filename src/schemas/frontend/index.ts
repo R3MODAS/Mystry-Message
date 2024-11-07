@@ -36,3 +36,19 @@ export const LoginSchema = z.object({
     password: passwordSchema
 });
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
+
+// Contact us schema
+export const ContactUsSchema = z.object({
+    name: z
+        .string()
+        .trim()
+        .min(6, "Name must be at least 6 characters")
+        .max(100, "Name must not exceed 100 characters"),
+    email: emailSchema,
+    message: z
+        .string()
+        .trim()
+        .min(1, "Message must be at least 1 character")
+        .max(300, "Name must not exceed 300 characters")
+});
+export type ContactUsSchemaType = z.infer<typeof ContactUsSchema>;

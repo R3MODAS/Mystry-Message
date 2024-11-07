@@ -10,10 +10,7 @@ export interface Message extends Document {
 // Message schema
 export const messageSchema: Schema<Message> = new Schema(
     {
-        content: {
-            type: String,
-            trim: true
-        }
+        content: String
     },
     { timestamps: true }
 );
