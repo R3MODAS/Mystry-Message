@@ -1,7 +1,3 @@
-Here’s a structured README file for your **Mystry Message** project:
-
----
-
 # Mystry Message
 
 Mystry Message is a web application that enables users to send and receive anonymous messages. Users can log in, share their unique link to receive anonymous messages, or use someone else’s link to send them an anonymous message. The app keeps all identities hidden for a secure and private experience.
